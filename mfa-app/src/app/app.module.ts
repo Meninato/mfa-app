@@ -2,10 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule  } from '@angular/platform-browser/animations';
 
-import { AppComponent } from './app.component';
+import { AppComponent } from '@app/app.component';
 import { ToastrModule } from 'ngx-toastr';
-import { HeaderComponent } from './core/layout/header/header.component';
-import { FooterComponent } from './core/layout/footer/footer.component';
+import { HeaderComponent } from '@app/core/layout/header/header.component';
+import { FooterComponent } from '@app/core/layout/footer/footer.component';
+import { AppRoutingModule } from '@app/app-routing.module';
+import { FormFieldErrorMessageService } from './core/services/form-field-error-message.service';
 
 @NgModule({
   declarations: [
@@ -16,9 +18,10 @@ import { FooterComponent } from './core/layout/footer/footer.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    AppRoutingModule
   ],
-  providers: [],
+  providers: [FormFieldErrorMessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
