@@ -2,16 +2,17 @@ import { Injectable } from "@angular/core";
 import { ValidationErrors } from "@angular/forms";
 
 const messages = new Map<string, {message: string, validatorErrorsKey?: string[]}>([
-  [ 'required',  { message : ' is required'} ],
-  [ 'minlength', { message : ' must be at least {0} characters long', validatorErrorsKey :['requiredLength']}],
+  [ 'required',  { message : 'Este campo é necessário.'} ],
+  [ 'minlength', { message : 'Informe ao menos {0} caracteres', validatorErrorsKey :['requiredLength']}],
+  [ 'email',     { message:  'O formato do email não parece estar correto.'}]
 ]);
 
 @Injectable()
 export class FormFieldErrorMessageService {
   constructor() {}
 
-  getValidatorErrorMessage (validatorName: string, validatorErrors?: ValidationErrors): string|undefined {
-    let args = messages.get(validatorName)?.validatorErrorsKey?.map(name => validatorErrors?.[name]);
+  getValidatorErrorMessage (validatorName: string, validatorErrors?: ValidationErrors): string | undefined {
+    const args = messages.get(validatorName)?.validatorErrorsKey?.map(name => validatorErrors?.[name]);
     return (args) ? this.stringFormat(messages.get(validatorName)?.message,...args) : messages.get(validatorName)?.message;
   }
 

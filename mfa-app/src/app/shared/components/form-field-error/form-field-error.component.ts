@@ -2,6 +2,7 @@ import { AfterContentInit, AfterViewInit, Component, ContentChild, Inject, Input
 import { AbstractControl } from "@angular/forms";
 import { FormFieldErrorMessageService } from "@app/core/services/form-field-error-message.service";
 import { SubmitFormComponent } from "@app/shared/components/submit-form/submit-form.component";
+import { FormSubmitService } from "@app/shared/services/form-submit.service";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -9,27 +10,34 @@ import { Subscription } from "rxjs";
   templateUrl: './form-field-error.component.html',
   styleUrls: ['./form-field-error.component.css']
 })
-export class FormFieldErrorComponent implements OnInit, OnDestroy, AfterContentInit {
-
-  private subscription?: Subscription;
-  showError: boolean = false;
-
+export class FormFieldErrorComponent implements OnInit, OnDestroy{
+  errorMessage: string | undefined | null = '';
   @Input({required: true}) control!: AbstractControl | null;
 
-  @ContentChild(SubmitFormComponent) formComponent!: SubmitFormComponent;
+  private subscription?: Subscription;
 
   constructor(
-    // @Inject(forwardRef(() => SubmitFormComponent)) private formComponent: SubmitFormComponent,
-    private formFieldErrorService: FormFieldErrorMessageService) { }
+    private formFieldErrorService: FormFieldErrorMessageService, 
+    private formSubmitService: FormSubmitService) { }
+
+    //passar só o nome e depois através do subscribe pegar o controls e filtrar com pipe
 
   ngOnInit(): void {
-
-  }
-
-  ngAfterContentInit(): void {
-    this.subscription = this.formComponent.onSubmitted$.subscribe((_) => {
-      this.showError = this.hasErrors();
+    this.subscription = this.formSubmitService.onSubmitted().subscribe((_) => {
       console.log("quantas");
+      console.log(this.control);
+
+      this.errorMessage = null;
+      if(this.control) {
+        for(const validationKeyName in this.control.errors) {
+          console.log("keyname", validationKeyName);
+          if(this.control.touched && this.control.invalid) {
+            this.errorMessage = this.formFieldErrorService.getValidatorErrorMessage(
+              validationKeyName, 
+              this.control.errors[validationKeyName]);
+          }
+        }
+      }
     });
   }
 
@@ -37,14 +45,14 @@ export class FormFieldErrorComponent implements OnInit, OnDestroy, AfterContentI
     this.subscription?.unsubscribe();
   }
 
-  hasErrors(): boolean {
-    console.log("foda");
-    return this.control !== null && this.control.invalid && this.isSubmitted();
-  }
+  // hasErrors(): boolean {
+  //   console.log("foda");
+  //   return this.control !== null && this.control.invalid && this.isSubmitted();
+  // }
 
-  private isSubmitted(): boolean {
-    return this.formComponent.formGroup.isSubmitted;
-  }
+  // private isSubmitted(): boolean {
+  //   return this.formComponent.formGroup.isSubmitted;
+  // }
 
   // get errorMessage(): string | null | undefined {
   //   if(this.control != null) {

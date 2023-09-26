@@ -11,6 +11,7 @@ const inputTypes = ['input', 'select', 'checkbox', 'radio'];
 })
 export class SubmitFormComponent {
 
+  
   @Input({required: true}) formGroup!: SubmitFormGroup;
   
   @ViewChild('formElement', { static: true }) formElement!: ElementRef<HTMLFormElement>;
