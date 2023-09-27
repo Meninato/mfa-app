@@ -12,32 +12,19 @@ interface AuthCredentials {
 @Component({
   selector: 'auth-signin',
   templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.css'],
-  providers: [FormSubmitService]
+  styleUrls: ['./signin.component.css']
 })
 export class SignInComponent implements OnInit {
   signInForm!: FormGroup;
 
-  @ViewChild('formRef', {static: true}) formRef!: ElementRef<HTMLFormElement>;
-
-  constructor(private formSubmitService: FormSubmitService) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.signInForm = this.createForm();
-    this.formSubmitService.formElement = this.formRef;
   }
 
   onSubmit() {
     console.log(this.signInForm.value);
-    this.formSubmitService.submit();
-  }
-
-  onFocus(event: Event) {
-    const element = event.target as HTMLElement;
-    if(element && element.classList.contains(this.formSubmitService.submittedClass)) {
-      this.signInForm.get(element.getAttribute('formcontrolname')!)?.setErrors(null);
-      this.formSubmitService.clearErrorOnControl(element);
-    }
   }
 
   private createForm() {
