@@ -1,8 +1,5 @@
-import { Component, ElementRef, OnInit, Output, Renderer2, ViewChild, ViewEncapsulation } from "@angular/core";
-import { FormControl, FormControlName, FormGroup, Validators } from "@angular/forms";
-import { SubmitFormGroup } from "@app/shared/models/SubmitFormGroup";
-import { FormSubmitService } from "@app/shared/services/form-submit.service";
-import { BehaviorSubject, Subject } from "rxjs";
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 interface AuthCredentials {
   email: string;
@@ -24,14 +21,18 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.signInForm.value);
+    console.log(this.signInForm);
   }
 
   private createForm() {
-    console.log(true);
-    return new SubmitFormGroup({
-      'email': new FormControl(null, [Validators.required, Validators.email]),
-      'password': new FormControl(null, [Validators.required, Validators.minLength(8)])
-    });
+    return new FormGroup(
+      {
+        'email': new FormControl(null, [Validators.required, Validators.email]),
+        'password': new FormControl(null, [Validators.required, Validators.minLength(8)]),
+      },
+      {
+        updateOn: "change"
+      }
+    );
   }
 }

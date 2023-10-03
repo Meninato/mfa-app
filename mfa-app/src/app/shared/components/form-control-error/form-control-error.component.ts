@@ -1,27 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Renderer2, TemplateRef } from "@angular/core";
-import { ValidationErrors } from "@angular/forms";
-
-export type ErrorComponentTemplate = TemplateRef<{ $implicit: ValidationErrors; text: string }>;
-
-export interface IControlErrorComponent {
-  customClass: string | string[];
-  text: string | null;
-  createTemplate?(tpl: ErrorComponentTemplate, error: ValidationErrors, text: string): void;
-}
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Renderer2 } from "@angular/core";
 
 @Component({
   selector: 'control-error',
   template: `
-    <p class="mt-2 text-sm text-red-600 dark:text-red-500" [class.hidden]="hideError" *ngIf="!errorTemplate">{{ errorText }}</p>
-    <ng-template *ngTemplateOutlet="errorTemplate; context: errorContext"></ng-template>
+    <p class="mt-2 text-sm text-red-600 dark:text-red-500" [class.hidden]="hideError" *ngIf="!hideError">{{ errorText }}</p>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormControlErrorComponent implements IControlErrorComponent {
+export class FormControlErrorComponent{
   errorText: string | null = null;
   hideError = true;
-  errorTemplate: ErrorComponentTemplate | undefined;
-  errorContext?: { $implicit: ValidationErrors; text: string };
 
   private addClasses: string[] = [];
 
@@ -29,12 +17,6 @@ export class FormControlErrorComponent implements IControlErrorComponent {
     private cdr: ChangeDetectorRef, 
     private host: ElementRef<HTMLElement>, 
     private renderer2: Renderer2) {}
-
-  createTemplate(tpl: ErrorComponentTemplate, error: ValidationErrors, text: string) {
-    this.errorTemplate = tpl;
-    this.errorContext = { $implicit: error, text };
-    this.cdr.markForCheck();
-  }
 
   set customClass(classes: string | string[]) {
     if (!this.hideError) {

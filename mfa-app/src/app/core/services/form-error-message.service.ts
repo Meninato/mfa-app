@@ -8,7 +8,7 @@ const messages = new Map<string, {message: string, validatorErrorsKey?: string[]
 ]);
 
 @Injectable()
-export class FormFieldErrorMessageService {
+export class FormErrorMessageService {
   constructor() {}
 
   getValidatorErrorMessage (validatorName: string, validatorErrors?: ValidationErrors): string | undefined {
