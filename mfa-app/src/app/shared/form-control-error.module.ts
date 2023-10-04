@@ -4,13 +4,12 @@ import { FormActionDirective } from "./directives/form-action.directive";
 import { FormControlErrorAnchorDirective } from "./directives/form-control-error-anchor.directive";
 import { FormControlErrorDirective } from "./directives/form-control-error.directive";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 @NgModule({
   declarations: [
     FormControlErrorComponent, 
     FormActionDirective, 
-    FormControlErrorAnchorDirective, 
+    FormControlErrorAnchorDirective,
     FormControlErrorDirective
   ],
   imports: [

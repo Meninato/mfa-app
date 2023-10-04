@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router, Event} from '@angular/router';
 import { initFlowbite } from 'flowbite';
-import { Observable, count, filter, map, switchMap, of, tap, defaultIfEmpty} from 'rxjs';
+import { Observable, filter, map, of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,20 +17,10 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     initFlowbite();
 
-    // this.displayLayout$ = this.router.events.pipe(
-    //   filter((event: Event) => event instanceof NavigationStart),
-    //   map(event => event as NavigationStart),
-    //   switchMap((event) => {
-    //     const show = !event.url.startsWith('/auth');
-    //     return of(show);
-    //   })
-    // );
-
     this.router.events.pipe(
       filter((event: Event) => event instanceof NavigationStart),
       map(event => event as NavigationStart)
     ).subscribe(event => {
-      console.log("how many times");
       this.displayLayout = !event.url.startsWith('/auth');
     });
   }

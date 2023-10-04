@@ -1,87 +1,79 @@
-import { ComponentRef, Directive, ElementRef, Host, Input, OnDestroy, OnInit, Optional, Self, ViewContainerRef } from "@angular/core";
-import { AbstractControl, ControlContainer, NgControl, ValidationErrors } from "@angular/forms";
-import { EMPTY, NEVER, Observable, Subject, debounceTime, distinctUntilChanged, fromEvent, map, merge, startWith, switchMap, takeUntil, tap } from "rxjs";
+import { ComponentRef, Directive, ElementRef, Host, Input, OnDestroy, OnInit, Optional, ViewContainerRef } from "@angular/core";
+import { AbstractControl, FormGroup, NgControl } from "@angular/forms";
+import { EMPTY, Observable, Subject, debounceTime, filter, fromEvent, last, merge, takeLast, takeUntil, tap } from "rxjs";
 import { FormActionDirective } from "./form-action.directive";
-import { FormControlErrorComponent } from "@app/shared/components/form-control-error/form-control-error.component";
-import { FormControlErrorAnchorDirective } from "@app/shared/directives/form-control-error-anchor.directive";
 import { FormErrorMessageService } from "@app/core/services/form-error-message.service";
+import { FormControlErrorComponent } from "../components/form-control-error/form-control-error.component";
+import { FormControlErrorAnchorDirective } from "./form-control-error-anchor.directive";
 
 @Directive({
   selector: '[formControlName], [formControl]'
 })
 export class FormControlErrorDirective implements OnInit, OnDestroy {
   @Input() controlErrorAnchor?: FormControlErrorAnchorDirective;
-  
-  private ref!: ComponentRef<FormControlErrorComponent> | null;
+
   private anchor!: ViewContainerRef;
-  private destroy = new Subject<void>();
+  private ref: ComponentRef<FormControlErrorComponent> | null = null;
   private submit$: Observable<Event | null>;
   private reset$: Observable<Event>;
-  private host: HTMLElement;
-  private control!: AbstractControl;
-
+  private destroy = new Subject<void>();
+  private element: HTMLElement;
+  
   constructor(
-    private formErrorMessageService: FormErrorMessageService,
-    private viewContainerRef: ViewContainerRef,
-    private elementRef: ElementRef<HTMLElement>,
-    private ngControl: NgControl,
-    @Optional() @Host() private form: FormActionDirective,
-    @Optional() @Self() private controlContainer: ControlContainer,
-    @Optional() private controlErrorAnchorParent: FormControlErrorAnchorDirective
-  ) {
-    this.host = this.elementRef.nativeElement;
-    this.submit$ = this.form ? this.form.submit$ : EMPTY;
-    this.reset$ = this.form ? this.form.reset$ : EMPTY;
-  }
+                private ngControl: NgControl,
+                private elementRef: ElementRef<HTMLElement>,
+                private viewContainerRef: ViewContainerRef,
+                private formErrorMessageService: FormErrorMessageService,
+    @Host()     private form: FormActionDirective,
+    @Optional() private controlErrorAnchorParent: FormControlErrorAnchorDirective) { 
+
+      this.submit$ = this.form ? this.form.submit$ : EMPTY;
+      this.reset$  = this.form ? this.form.reset$  : EMPTY;
+      this.element = this.elementRef.nativeElement;
+
+    }
 
   ngOnInit(): void {
+
     this.anchor = this.resolveAnchor();
-    this.control = (this.controlContainer || this.ngControl).control!;
-    const statusChanges$ = this.control.statusChanges.pipe(distinctUntilChanged());
-    const valueChanges$ = this.control.valueChanges.pipe(debounceTime(1000));
-    const controlChanges$ = merge(statusChanges$, valueChanges$);
-    
-    const submit$ = merge(
-      this.submit$.pipe(map(() => 'submit')),
-      this.reset$.pipe(
-        map(() => 'reset'),
-        tap(() => this.hideError())
-      )
-    );
 
-    const blur$ = fromEvent(this.host, 'focusin');
-    const changesOnBlur$ = blur$.pipe(switchMap(() => valueChanges$.pipe(startWith('focusin'))));
-
-    const changesOnSubmit$ = submit$.pipe(
-      switchMap((submit) => (submit === 'submit' ? controlChanges$.pipe(startWith('submit')) : NEVER))
-    );
+    const valueChanges$ = this.control.valueChanges.pipe(debounceTime(600));
+    const focusin$ = fromEvent(this.element, 'focusin')
+    const formEvents$ = merge(this.submit$, this.reset$);
 
     this.reset$.pipe(takeUntil(this.destroy)).subscribe(() => this.clearRefs());
 
-    merge(changesOnBlur$, changesOnSubmit$)
-    .pipe(takeUntil(this.destroy))
-    .subscribe((etype) => {
+    const controlChanges$ = merge(formEvents$, valueChanges$, focusin$);
+
+    controlChanges$.pipe(
+      takeUntil(this.destroy),
+      filter((e) => e instanceof Event)
+    )
+    .subscribe((e: Event) => {
       const hasErrors = !!this.control.errors;
-      if (hasErrors && etype === 'submit') {
+      if (hasErrors && e instanceof SubmitEvent ) {
         this.showError();
-      } else if(etype === 'reset' || etype === 'focusin') {
+      } else {
         this.hideError();
       }
-    });
-    
+    })
   }
 
   ngOnDestroy(): void {
     this.destroy.next();
   }
 
+  get control() {
+    return this.ngControl.control!;
+  }
+
   showError(): void {
+
     const controlErrors = this.control.errors;
     if (controlErrors) {
       const firstKey = Object.keys(controlErrors)[0];
-      console.log(firstKey);
-      console.log(controlErrors[firstKey]);
-      this.setError("olá");
+      const text = this.formErrorMessageService.getValidatorErrorMessage(firstKey, controlErrors[firstKey]);
+      this.setError(text);
     }
   }
 
@@ -113,4 +105,31 @@ export class FormControlErrorDirective implements OnInit, OnDestroy {
 
       instance.text = text;
   }
+}
+
+export const getControlName = (control: AbstractControl): string | null =>
+{
+    let controlName: string | null = null;
+    const parent = control["_parent"];
+
+    // only such parent, which is FormGroup, has a dictionary 
+    // with control-names as a key and a form-control as a value
+    if (parent instanceof FormGroup)
+    {
+        // now we will iterate those keys (i.e. names of controls)
+        Object.keys(parent.controls).forEach((name) =>
+        {
+            // and compare the passed control and 
+            // a child control of a parent - with provided name (we iterate them all)
+            if (control === parent.controls[name])
+            {
+                // both are same: control passed to Validator
+                //  and this child - are the same references
+                controlName = name;
+            }
+        });
+    }
+
+    // we either found a name or simply return null
+    return controlName;
 }

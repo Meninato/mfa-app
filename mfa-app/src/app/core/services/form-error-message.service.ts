@@ -11,12 +11,14 @@ const messages = new Map<string, {message: string, validatorErrorsKey?: string[]
 export class FormErrorMessageService {
   constructor() {}
 
-  getValidatorErrorMessage (validatorName: string, validatorErrors?: ValidationErrors): string | undefined {
+  getValidatorErrorMessage (validatorName: string, validatorErrors?: ValidationErrors): string | null {
     const args = messages.get(validatorName)?.validatorErrorsKey?.map(name => validatorErrors?.[name]);
-    return (args) ? this.stringFormat(messages.get(validatorName)?.message,...args) : messages.get(validatorName)?.message;
+    const result = (args) ? this.stringFormat(messages.get(validatorName)?.message,...args) : messages.get(validatorName)?.message;
+
+    return result === undefined ? null : result;
   }
 
-  private stringFormat(template: string|undefined, ...args: any[]) {
+  private stringFormat(template: string | undefined, ...args: any[]) {
     if(template){
         return template.replace(/{(\d+)}/g, (match, index) => {
         return typeof args[index] !== 'undefined'
@@ -24,6 +26,6 @@ export class FormErrorMessageService {
             : match;
         });
     }
-    return undefined;
+    return null;
  }
 }
