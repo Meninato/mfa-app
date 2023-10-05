@@ -22,6 +22,6 @@ import { CommonModule } from "@angular/common";
     FormControlErrorDirective
   ]
 })
-export class FormControlErrorModule {
+export class SharedFormControlErrorModule {
 
 }

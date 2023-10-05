@@ -21,7 +21,7 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log(this.signInForm);
+    console.log("Hello");
   }
 
   private createForm() {

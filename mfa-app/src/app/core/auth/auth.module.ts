@@ -4,18 +4,20 @@ import { SignUpComponent } from "./signup/signup.component";
 import { AuthRoutingModule } from "./auth-routing.module";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { FormControlErrorModule } from "@app/shared/form-control-error.module";
+import { SharedFormControlErrorModule } from "@app/shared/shared-form-control-error.module";
+import { LoadingButtonComponent } from "@app/shared/components/loading-button/loading-button.component";
 
 @NgModule({
   declarations: [
     SignInComponent,
-    SignUpComponent
+    SignUpComponent,
+    LoadingButtonComponent
   ],
   imports: [
     CommonModule,
     AuthRoutingModule, 
     ReactiveFormsModule,
-    FormControlErrorModule
+    SharedFormControlErrorModule
   ]
 })
 export class AuthModule {
