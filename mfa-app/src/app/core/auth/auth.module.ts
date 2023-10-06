@@ -6,11 +6,13 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { SharedFormControlErrorModule } from "@app/shared/shared-form-control-error.module";
 import { LoadingButtonComponent } from "@app/shared/components/loading-button/loading-button.component";
+import { ForgotPasswordComponent } from "./forgot-password/forgot-password.component";
 
 @NgModule({
   declarations: [
     SignInComponent,
     SignUpComponent,
+    ForgotPasswordComponent,
     LoadingButtonComponent
   ],
   imports: [
