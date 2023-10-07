@@ -38,18 +38,19 @@ export class FormControlErrorDirective implements OnInit, OnDestroy {
     this.anchor = this.resolveAnchor();
 
     const valueChanges$ = this.control.valueChanges.pipe(debounceTime(600));
-    const focusin$ = fromEvent(this.element, 'focusin')
+    const htmlEvent$ = removeErrorOnEvent(this.element);
     const formEvents$ = merge(this.submit$, this.reset$);
 
     this.reset$.pipe(takeUntil(this.destroy)).subscribe(() => this.clearRefs());
 
-    const controlChanges$ = merge(formEvents$, valueChanges$, focusin$);
+    const controlChanges$ = merge(formEvents$, valueChanges$, htmlEvent$);
 
     controlChanges$.pipe(
       takeUntil(this.destroy),
       filter((e) => e instanceof Event)
     )
     .subscribe((e: Event) => {
+      console.log(e);
       const hasErrors = !!this.control.errors;
       if (hasErrors && e instanceof SubmitEvent ) {
         this.showError();
@@ -104,6 +105,28 @@ export class FormControlErrorDirective implements OnInit, OnDestroy {
       const instance = this.ref.instance;
 
       instance.text = text;
+  }
+
+  private removeErrorOnEvent(element: HTMLElement): Observable<Event> {
+    let  fromEvent(this.element, 'focusin');
+
+    if(element.tagName === 'INPUT') {
+      const input = <HTMLInputElement>element;
+
+      const focusIn = ['email', 'password', 'text'];
+      if(focusIn.includes(input.type)) {
+
+      }
+    }
+
+    // if(element.tagName === 'INPUT' || element.tagName === 'SELECT') {
+    //   const input = <HTMLInputElement>element;
+    //   if(input.type !== 'checkbox') {
+    //     return true;
+    //   }
+    // }
+    // return false;
+    // return element.tagName === 'INPUT' || element.tagName === 'SELECT';
   }
 }
 

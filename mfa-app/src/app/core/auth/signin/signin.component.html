@@ -26,7 +26,7 @@
                   text="Acessar" 
                   loadingText="Um momento..."></div>
                 <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Ainda não tem uma conta? <a href="#" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Criar nova conta</a>
+                  Ainda não tem uma conta? <a [routerLink]="['/auth', 'signup']" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Criar nova conta</a>
                 </p>
               </form>
           </div>

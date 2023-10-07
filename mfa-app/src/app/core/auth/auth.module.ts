@@ -7,6 +7,7 @@ import { CommonModule } from "@angular/common";
 import { SharedFormControlErrorModule } from "@app/shared/shared-form-control-error.module";
 import { LoadingButtonComponent } from "@app/shared/components/loading-button/loading-button.component";
 import { ForgotPasswordComponent } from "./forgot-password/forgot-password.component";
+import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ForgotPasswordComponent } from "./forgot-password/forgot-password.compo
     CommonModule,
     AuthRoutingModule, 
     ReactiveFormsModule,
+    RxReactiveFormsModule,
     SharedFormControlErrorModule
   ]
 })
