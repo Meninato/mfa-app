@@ -1,6 +1,9 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Store } from "@ngrx/store";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import { loginSuccess } from "../../store/auth.actions";
+import { IAuthLoginResponse } from "../../models/auth-login-response.model";
 
 @Component({
   selector: 'auth-signup',
@@ -9,6 +12,10 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 })
 export class SignUpComponent {
   signupForm = this.createForm();
+
+  constructor(private store: Store) {
+    this.store.dispatch(loginSuccess({response: "" }));
+   }
 
   onSubmit() {
     console.log(this.signupForm);
