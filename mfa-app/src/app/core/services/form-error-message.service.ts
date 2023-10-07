@@ -4,7 +4,8 @@ import { ValidationErrors } from "@angular/forms";
 const messages = new Map<string, {message: string, validatorErrorsKey?: string[]}>([
   [ 'required',  { message : 'Este campo é necessário.'} ],
   [ 'minlength', { message : 'Informe ao menos {0} caracteres', validatorErrorsKey :['requiredLength']}],
-  [ 'email',     { message:  'O formato do email não parece estar correto.'}]
+  [ 'email',     { message : 'O formato do email não parece estar correto.'}],
+  [ 'compare',   { message : 'O valor não é o mesmo informado.'}]
 ]);
 
 @Injectable()

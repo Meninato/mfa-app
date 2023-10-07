@@ -11,6 +11,7 @@ export class SignUpComponent {
   signupForm = this.createForm();
 
   onSubmit() {
+    console.log(this.signupForm);
     if(this.signupForm.valid) {
 
     }
