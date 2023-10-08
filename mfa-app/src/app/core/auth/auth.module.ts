@@ -5,17 +5,16 @@ import { AuthRoutingModule } from "./auth-routing.module";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { SharedFormControlErrorModule } from "@app/shared/shared-form-control-error.module";
-import { LoadingButtonComponent } from "@app/shared/components/loading-button/loading-button.component";
 import { ForgotPasswordComponent } from "./components/forgot-password/forgot-password.component";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { AuthStoreModule } from "./store/auth-store.module";
+import { LoadingButtonModule } from "@app/shared/components/loading-button/loading-button.module";
 
 @NgModule({
   declarations: [
     SignInComponent,
     SignUpComponent,
-    ForgotPasswordComponent,
-    LoadingButtonComponent
+    ForgotPasswordComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +22,8 @@ import { AuthStoreModule } from "./store/auth-store.module";
     ReactiveFormsModule,
     RxReactiveFormsModule,
     SharedFormControlErrorModule,
-    AuthStoreModule
+    AuthStoreModule,
+    LoadingButtonModule
   ]
 })
 export class AuthModule {

@@ -4,13 +4,13 @@ import { BrowserAnimationsModule  } from '@angular/platform-browser/animations';
 
 import { AppComponent } from '@app/app.component';
 import { ToastrModule } from 'ngx-toastr';
-import { HeaderComponent } from '@app/core/layout/header/header.component';
-import { FooterComponent } from '@app/core/layout/footer/footer.component';
 import { AppRoutingModule } from '@app/app-routing.module';
-import { FormErrorMessageService } from './core/services/form-error-message.service';
 import { AppConfigService } from './core/services/app-config.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
+import { CoreModule } from './core/core.module';
+import { TokenInterceptor } from './core/interceptors/token.interceptor';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
 export function initializeApp(appConfigService: AppConfigService) {
   return () => appConfigService.load();
@@ -18,9 +18,7 @@ export function initializeApp(appConfigService: AppConfigService) {
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HeaderComponent,
-    FooterComponent
+    AppComponent  
   ],
   imports: [
     BrowserModule,
@@ -28,17 +26,18 @@ export function initializeApp(appConfigService: AppConfigService) {
     HttpClientModule,
     ToastrModule.forRoot(),
     AppRoutingModule,
-    StoreModule.forRoot()
+    StoreModule.forRoot(),
+    CoreModule
   ],
   providers: [
-    FormErrorMessageService,
-    AppConfigService,
     {
       provide: APP_INITIALIZER,
       multi: true,
       deps: [AppConfigService],
       useFactory: initializeApp
     },
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

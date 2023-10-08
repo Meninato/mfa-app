@@ -1,6 +1,5 @@
+import { IAuthLoginRequest, IAuthLoginResponse } from "@app/core/models/auth.model";
 import { createAction, props } from "@ngrx/store";
-import { IAuthLoginRequest } from "../models/auth-login-request.model";
-import { IAuthLoginResponse } from "../models/auth-login-response.model";
 
 export const login = createAction(
   '[Auth Signin] Login',

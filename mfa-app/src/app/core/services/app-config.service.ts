@@ -5,20 +5,19 @@ import { Observable, map } from "rxjs";
 export interface IAppConfig {
   api: {
     baseUrl: string;
+    auth: {
+      login: string;
+    }
   };
 }
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class AppConfigService {
   private appConfig: IAppConfig | null = null;
 
   constructor(private http: HttpClient) {}
 
   load(): Observable<void>  {
-    // const config = this.http.get<IAppConfig>('/mfa-app/src/app.config.json');
-    // return lastValueFrom(config).then((config) => {
-    //   this.appConfig = config;
-    // });
     return this.http.get<IAppConfig>('app.config.json').pipe(map((config) => {
       this.appConfig = config;
     }));

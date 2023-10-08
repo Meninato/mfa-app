@@ -8,7 +8,7 @@ const messages = new Map<string, {message: string, validatorErrorsKey?: string[]
   [ 'compare',   { message : 'O valor não é o mesmo informado.'}]
 ]);
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class FormErrorMessageService {
   constructor() {}
 
