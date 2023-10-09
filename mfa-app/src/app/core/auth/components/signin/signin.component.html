@@ -22,9 +22,10 @@
                   <a [routerLink]="['/auth', 'forgot-password']" class="ml-auto text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Esqueceu a senha?</a>
                 </div>
                 <div loading-button
-                  [isDisabled]="!signInForm.valid"
+                  [isDisabled]="!signInForm.valid || isLoading"
                   text="Acessar" 
-                  loadingText="Um momento..."></div>
+                  loadingText="Um momento..."
+                  [isLoading]="isLoading"></div>
                 <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                   Ainda não tem uma conta? <a [routerLink]="['/auth', 'signup']" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Criar nova conta</a>
                 </p>

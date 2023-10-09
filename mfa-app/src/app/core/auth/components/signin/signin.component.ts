@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { LoadingButtonComponent } from "@app/shared/components/loading-button/loading-button.component";
-import { Observable, finalize, take } from "rxjs";
+import { Store } from "@ngrx/store";
+import * as fromAuth from '@app/core/auth/store';
+import { Observable, Subscription, tap } from "rxjs";
 
-interface AuthCredentials {
+interface IAuthCredentials {
   email: string;
   password: string;
 }
@@ -13,31 +15,37 @@ interface AuthCredentials {
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })
-export class SignInComponent implements OnInit {
-  @ViewChild(LoadingButtonComponent) submitButton!: LoadingButtonComponent;
-  
+export class SignInComponent implements OnInit, OnDestroy {
   signInForm!: FormGroup;
+  isLoading: boolean = false;
 
-  constructor() {}
+  private loadingSubs?: Subscription;
+
+  constructor(private store: Store) {}
 
   ngOnInit(): void {
     this.signInForm = this.createForm();
+    this.loadingSubs = this.store.select(fromAuth.AuthSelectors.selectAuthIsLoading).subscribe(
+      (loading) => this.isLoading = loading
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.loadingSubs?.unsubscribe();
   }
 
   onSubmit() {
     if(this.signInForm.valid) {
-      console.log("valido");
-      this.test().pipe(take(1)).subscribe();
-    } else {
-      console.log("inválido");
-    }
+      const credentials = this.getCredentials();
+      this.store.dispatch(fromAuth.AuthActions.login({request: credentials}));
+    } 
   }
 
-  test(): Observable<void> {
-    this.submitButton.loading = true;
-    return new Observable<void>(subscriber => {
-      setTimeout(() => { subscriber.complete() }, 5000);
-    }).pipe(finalize(() => this.submitButton.loading = false ));
+  private getCredentials(): IAuthCredentials {
+    return {
+      email: this.signInForm.get('email')?.value,
+      password: this.signInForm.get('password')?.value
+    };
   }
 
   private createForm() {

@@ -11,6 +11,8 @@ import { StoreModule } from '@ngrx/store';
 import { CoreModule } from './core/core.module';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthModule } from './core/auth/auth.module';
 
 export function initializeApp(appConfigService: AppConfigService) {
   return () => appConfigService.load();
@@ -27,6 +29,7 @@ export function initializeApp(appConfigService: AppConfigService) {
     ToastrModule.forRoot(),
     AppRoutingModule,
     StoreModule.forRoot(),
+    EffectsModule.forRoot(),
     CoreModule
   ],
   providers: [

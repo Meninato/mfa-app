@@ -1,9 +1,7 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { IAuthLoginResponse } from "@app/core/models/auth.model";
 import { AuthService } from "@app/core/services/auth.service";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { take } from "rxjs";
 
 @Component({
   selector: 'auth-signup',
@@ -13,12 +11,7 @@ import { take } from "rxjs";
 export class SignUpComponent {
   signupForm = this.createForm();
 
-  constructor(private authService: AuthService) {
-      this.authService.login({email: 'bob@blue.com', password: '12345678'}).pipe(take(1)).subscribe({
-        next: (response: IAuthLoginResponse) => console.log(response),
-        error: (err) => console.log(err)
-      });
-  }
+  constructor(private authService: AuthService) {}
 
   onSubmit() {
     if(this.signupForm.valid) {

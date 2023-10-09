@@ -1,16 +1,36 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Store } from "@ngrx/store";
+import { Observable, mergeMap, take } from "rxjs";
+import * as fromAuth from '@app/core/auth/store';
+import { LocalStorageService } from "../services/local-storage.service";
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class TokenInterceptor implements HttpInterceptor {
+
+  constructor(
+    private store: Store, 
+    private localStorageService: LocalStorageService) {}
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = ''; //TODO: retrieve from storage
+    const token = this.localStorageService.getItem('token');
+    if(token) {
+      req = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
 
-    const request = req.clone({
-      setHeaders: {
-        ...(token ? { Authorization: `Bearer ${token}` } : {})
-      }
-    });
+    return next.handle(req);
 
-    return next.handle(request);
+    //IF YOU DECIDE TO GET IT FROM STORE
+    // return this.store.select(fromAuth.AuthSelectors.selectAuthToken).pipe(
+    //   take(1),
+    //   mergeMap(token => {
+    //     const request =  token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` }})  : req;
+    //     return next.handle(request);
+    //   })
+    // );
   }
 }

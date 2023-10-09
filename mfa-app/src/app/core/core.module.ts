@@ -3,11 +3,14 @@ import { HeaderComponent } from "./components/layout/header/header.component";
 import { FooterComponent } from "./components/layout/footer/footer.component";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
+import { UserMenuComponent } from "./components/layout/header/user-menu/user-menu.component";
+import { AuthModule } from "./auth/auth.module";
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    UserMenuComponent
   ],
   imports: [
     CommonModule,
@@ -15,7 +18,8 @@ import { RouterModule } from "@angular/router";
   ],
   exports: [
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    UserMenuComponent
   ]
 })
 export class CoreModule {

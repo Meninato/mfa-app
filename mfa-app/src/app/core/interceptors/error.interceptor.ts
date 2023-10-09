@@ -12,19 +12,14 @@ export class ErrorInterceptor implements HttpInterceptor{
     return next.handle(req).pipe(
       catchError((caughtError: HttpErrorResponse) => {
 
-        console.log(caughtError);
+        let errorMessage = 'Whoops... algo deu errado';
 
-        let errorMessage = '';
-
-        if(caughtError.error instanceof ErrorEvent) {
-         //client side error
-          console.log("Client side error");
-
+        if(caughtError.status === 0 && caughtError.error instanceof ProgressEvent) {
+          errorMessage = 'Não foi possível conectar ao servidor. Tente novamente em alguns minutos.'
+        }
+        else if(caughtError.error instanceof ErrorEvent) {
           errorMessage = caughtError.error.message;
         } else {
-          //server side error
-          console.log("Server side error");
-
           const apiErrorResponse = caughtError.error as IApiErrorResponse;
           errorMessage = apiErrorResponse.message;
           if(apiErrorResponse.errors) {

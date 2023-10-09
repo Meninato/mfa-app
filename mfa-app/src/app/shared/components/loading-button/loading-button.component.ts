@@ -20,12 +20,13 @@ export class LoadingButtonComponent implements OnDestroy{
   @Input() loadingText = 'Aguarde...';
   @Input() buttonType: ButtonTypes  = 'submit';
   @Input() callback: IButtonCallback | null = null;
-  
-  isLoading = false;
+  @Input() isLoading: boolean = false;
 
   private btnSubscription?: Subscription;
 
-  constructor() { }
+  constructor() { 
+   
+  }
 
   ngOnDestroy(): void {
     this.btnSubscription?.unsubscribe();
@@ -33,15 +34,10 @@ export class LoadingButtonComponent implements OnDestroy{
 
   onButtonClicked() {
     if(this.callback && this.buttonType === "button") {
-      this.loading = true;
+      this.isLoading = true;
       this.btnSubscription = this.callback().pipe(
-        finalize(() => this.loading = true )
+        finalize(() => this.isLoading = true )
       ).subscribe();
     }
-  }
-
-  set loading(value: boolean) {
-    this.isLoading = value;
-    this.isDisabled = value;
   }
 }
