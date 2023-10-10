@@ -1,7 +1,7 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Store } from "@ngrx/store";
 import { Observable, mergeMap, take } from "rxjs";
-import * as fromAuth from '@app/core/auth/store';
+import * as fromAuth from '@app/core/store/auth';
 import { LocalStorageService } from "../services/local-storage.service";
 import { Injectable } from "@angular/core";
 

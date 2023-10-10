@@ -6,13 +6,10 @@ import { AppComponent } from '@app/app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from '@app/app-routing.module';
 import { AppConfigService } from './core/services/app-config.service';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { StoreModule } from '@ngrx/store';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
 import { TokenInterceptor } from './core/interceptors/token.interceptor';
 import { ErrorInterceptor } from './core/interceptors/error.interceptor';
-import { EffectsModule } from '@ngrx/effects';
-import { AuthModule } from './core/auth/auth.module';
 
 export function initializeApp(appConfigService: AppConfigService) {
   return () => appConfigService.load();
@@ -23,13 +20,6 @@ export function initializeApp(appConfigService: AppConfigService) {
     AppComponent  
   ],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    ToastrModule.forRoot(),
-    AppRoutingModule,
-    StoreModule.forRoot(),
-    EffectsModule.forRoot(),
     CoreModule
   ],
   providers: [

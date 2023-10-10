@@ -1,27 +1,32 @@
-import { NgModule } from "@angular/core";
-import { HeaderComponent } from "./components/layout/header/header.component";
-import { FooterComponent } from "./components/layout/footer/footer.component";
-import { CommonModule } from "@angular/common";
-import { RouterModule } from "@angular/router";
-import { UserMenuComponent } from "./components/layout/header/user-menu/user-menu.component";
-import { AuthModule } from "./auth/auth.module";
+import { NgModule, Optional, SkipSelf } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { HttpClientModule } from "@angular/common/http";
+import { ToastrModule } from "ngx-toastr";
+import { StoreModule } from "@ngrx/store";
+import { EffectsModule } from "@ngrx/effects";
+import { AppRoutingModule } from "@app/app-routing.module";
+import { LayoutModule } from "./layout.module";
 
 @NgModule({
-  declarations: [
-    HeaderComponent,
-    FooterComponent,
-    UserMenuComponent
-  ],
   imports: [
-    CommonModule,
-    RouterModule
+    HttpClientModule,
+    AppRoutingModule,
+    ToastrModule.forRoot(),
+    StoreModule.forRoot(),
+    EffectsModule.forRoot(),
   ],
   exports: [
-    HeaderComponent,
-    FooterComponent,
-    UserMenuComponent
+    BrowserModule,
+    BrowserAnimationsModule,
+    LayoutModule,
+    AppRoutingModule
   ]
 })
 export class CoreModule {
-
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+    if(parentModule) {
+      throw new Error(`${parentModule.constructor.name} has already been loaded. Import this module in the AppModule only.`);
+    }
+  }
 }

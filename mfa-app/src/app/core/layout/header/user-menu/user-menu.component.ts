@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { Store } from "@ngrx/store";
-import * as fromAuth from '@app/core/auth/store';
+import * as fromAuth from '@app/core/store/auth';
 import { Observable, Subscription, take } from "rxjs";
 
 @Component({

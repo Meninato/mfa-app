@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AuthService } from "@app/core/services/auth.service";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import * as fromAuth from '@app/core/auth/store';
+import * as fromAuth from '@app/core/store/auth';
 import { catchError, exhaustMap, map, of, tap } from "rxjs";
 import { Router } from "@angular/router";
 import { LocalStorageService } from "@app/core/services/local-storage.service";
