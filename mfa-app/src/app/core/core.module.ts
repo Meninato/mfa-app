@@ -7,6 +7,7 @@ import { StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
 import { AppRoutingModule } from "@app/app-routing.module";
 import { LayoutModule } from "./layout.module";
+import { AppEffects } from "./store/app.effects";
 
 @NgModule({
   imports: [
@@ -14,7 +15,9 @@ import { LayoutModule } from "./layout.module";
     AppRoutingModule,
     ToastrModule.forRoot(),
     StoreModule.forRoot(),
-    EffectsModule.forRoot(),
+    EffectsModule.forRoot([
+      AppEffects
+    ]),
   ],
   exports: [
     BrowserModule,

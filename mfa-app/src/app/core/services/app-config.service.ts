@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from "rxjs";
+import { Observable, lastValueFrom, map } from "rxjs";
 
 export interface IAppConfig {
   api: {
@@ -17,10 +17,13 @@ export class AppConfigService {
 
   constructor(private http: HttpClient) {}
 
-  load(): Observable<void>  {
+  load() {
     return this.http.get<IAppConfig>('app.config.json').pipe(map((config) => {
       this.appConfig = config;
     }));
+
+    // return await lastValueFrom(this.http.get<IAppConfig>('app.config.json'))
+    //   .then((config) => this.appConfig = config);
   }
 
   get api() {

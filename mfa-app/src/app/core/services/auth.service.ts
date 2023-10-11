@@ -7,14 +7,18 @@ import { AppConfigService } from "./app-config.service";
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
+  private baseUrl: string;
+  private loginUrl: string;
+
   constructor(
     private http: HttpClient,
     private config: AppConfigService) {
-
+      this.baseUrl = this.config.api.baseUrl;
+      this.loginUrl = this.config.api.auth.login;
     }
 
   login(request: IAuthLoginRequest): Observable<IAuthLoginResponse> {
-    return this.http.post<IAuthLoginResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.login}`, request);
+    return this.http.post<IAuthLoginResponse>(`${this.baseUrl}/${this.loginUrl}`, request);
   }
 
 }
