@@ -11,7 +11,16 @@ export class AppEffects {
     this.actions$.pipe(
       ofType(fromApp.AppActions.showAlert),
       tap(({options}) => {
-        this.toastr.info(options.message, options.title);
+        const alertType = options.alertType ?? 'info';
+        if(alertType === "success") {
+          this.toastr.success(options.message, options.title);
+        } else if(alertType === "info") {
+          this.toastr.info(options.message, options.title);
+        } else if(alertType === "warning") {
+          this.toastr.warning(options.message, options.title);
+        } else if(alertType === "error") {
+          this.toastr.error(options.message, options.title);
+        }
       })
     ), { dispatch: false }
   );

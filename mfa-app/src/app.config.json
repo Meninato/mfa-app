@@ -2,7 +2,8 @@
   "api": {
     "baseUrl": "http://localhost:4000/api/v1",
     "auth": {
-      "login": "accounts/authenticate"
+      "login": "accounts/authenticate",
+      "loginWithToken": "accounts/signin/with-token"
     }
   }
 }

@@ -15,7 +15,8 @@ export interface IAuthLoginResponse {
   jwtToken: string; 
 }
 
-export interface IAuthUser {
+export interface IAuthSigninWithTokenResponse {
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
@@ -26,7 +27,6 @@ export interface IAuthUser {
 }
 
 export class AuthUser {
-
   constructor(
     public firstName: string,
     public lastName: string,

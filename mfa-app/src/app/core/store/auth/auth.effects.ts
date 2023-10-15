@@ -2,7 +2,8 @@ import { Injectable } from "@angular/core";
 import { AuthService } from "@app/core/services/auth.service";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import * as fromAuth from '@app/core/store/auth';
-import { catchError, exhaustMap, map, of, tap } from "rxjs";
+import * as fromApp from '@app/core/store';
+import { catchError, exhaustMap, map, of, switchMap, tap } from "rxjs";
 import { Router } from "@angular/router";
 import { LocalStorageService } from "@app/core/services/local-storage.service";
 
@@ -29,7 +30,6 @@ export class AuthEffects {
       ofType(fromAuth.AuthActions.loginSuccess),
       tap(({response}) => {
         this.localStorageService.setItem('token', response.jwtToken);
-        console.log(response);
         this.router.navigate(['/']);
       })
     ), { dispatch: false }
@@ -37,8 +37,11 @@ export class AuthEffects {
 
   loginFailure$ = createEffect(() => 
     this.actions$.pipe(
-      ofType(fromAuth.AuthActions.loginFailure)
-    ), { dispatch: false }
+      ofType(fromAuth.AuthActions.loginFailure),
+      switchMap(({error}) => {
+        return of(fromApp.AppActions.showAlert({options: {message: error}}));
+      })
+    )
   );
 
   logout$ = createEffect(() =>

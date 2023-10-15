@@ -7,6 +7,7 @@ export interface IAppConfig {
     baseUrl: string;
     auth: {
       login: string;
+      loginWithToken: string;
     }
   };
 }

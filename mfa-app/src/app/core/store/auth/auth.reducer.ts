@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { login, loginFailure, loginSuccess, logout } from "./auth.actions";
-import { AuthUser } from "@app/core/models/auth.model";
+import { AuthUser } from "@app/core/models/api/account.model";
 
 export interface IAuthState {
   token: string;

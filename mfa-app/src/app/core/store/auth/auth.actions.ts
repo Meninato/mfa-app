@@ -1,4 +1,4 @@
-import { IAuthLoginRequest, IAuthLoginResponse } from "@app/core/models/auth.model";
+import { IAuthLoginRequest, IAuthLoginResponse } from "@app/core/models/api/account.model";
 import { createAction, props } from "@ngrx/store";
 
 export const login = createAction(
