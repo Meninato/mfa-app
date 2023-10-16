@@ -1,9 +1,10 @@
-import { NgModule } from "@angular/core";
+import { NgModule, inject } from "@angular/core";
 import { Route, RouterModule, PreloadAllModules } from "@angular/router";
 import { HomeComponent } from "./core/pages/home/home.component";
 import { SignInComponent } from "./core/pages/signin/signin.component";
 import { SignUpComponent } from "./core/pages/signup/signup.component";
 import { ForgotPasswordComponent } from "./core/pages/forgot-password/forgot-password.component";
+import { isUserLoggedInGuard } from "./core/guards/auth.guard";
 
 const routes: Route[] = [
   {
@@ -12,6 +13,7 @@ const routes: Route[] = [
   },
   { 
     path: 'auth',
+    canActivate: [isUserLoggedInGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'signin' },
       {

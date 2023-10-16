@@ -7,24 +7,16 @@ import { AppConfigService } from "./app-config.service";
 @Injectable({providedIn: 'root'})
 export class AuthService {
 
-  private baseUrl: string;
-  private loginUrl: string;
-  private loginWithTokenUrl: string;
-
   constructor(
     private http: HttpClient,
-    private config: AppConfigService) {
-      this.baseUrl = this.config.api.baseUrl;
-      this.loginUrl = this.config.api.auth.login;
-      this.loginWithTokenUrl = this.config.api.auth.loginWithToken;
-    }
+    private config: AppConfigService) { }
 
   login(request: IAuthLoginRequest): Observable<IAuthLoginResponse> {
-    return this.http.post<IAuthLoginResponse>(`${this.baseUrl}/${this.loginUrl}`, request);
+    return this.http.post<IAuthLoginResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.login}`, request);
   }
 
   loginWithToken(): Observable<IAuthSigninWithTokenResponse> {
-    return this.http.post<IAuthSigninWithTokenResponse>(`${this.baseUrl}/${this.loginWithTokenUrl}`, {});
+    return this.http.post<IAuthSigninWithTokenResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.loginWithToken}`, {});
   }
 
 }

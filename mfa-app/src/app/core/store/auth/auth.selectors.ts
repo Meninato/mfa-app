@@ -20,5 +20,5 @@ export const selectAuthIsLoading = createSelector(
 
 export const selectAuthIsAuthenticated = createSelector(
   selectAuth,
-  (state) => !!state?.user
+  (state) => !!state.user
 )

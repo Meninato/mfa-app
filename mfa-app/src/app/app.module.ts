@@ -1,15 +1,8 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
-
+import { NgModule } from '@angular/core';
 import { AppComponent } from '@app/app.component';
-import { AppConfigService } from './core/services/app-config.service';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { CoreModule } from './core/core.module';
-import { TokenInterceptor } from './core/interceptors/token.interceptor';
-import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 
-export function initializeApp(appConfigService: AppConfigService) {
-  return () => appConfigService.load();
-}
+import { CoreModule } from './core/core.module';
+
 
 // export function initApplication(store: Store<AppState>) {
 //   return () =>
@@ -35,16 +28,7 @@ export function initializeApp(appConfigService: AppConfigService) {
   imports: [
     CoreModule
   ],
-  providers: [
-    {
-      provide: APP_INITIALIZER,
-      multi: true,
-      deps: [AppConfigService],
-      useFactory: initializeApp
-    },
-    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

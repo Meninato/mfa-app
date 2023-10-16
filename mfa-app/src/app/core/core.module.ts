@@ -1,22 +1,46 @@
-import { NgModule, Optional, SkipSelf } from "@angular/core";
+import { APP_INITIALIZER, NgModule, Optional, SkipSelf } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { ToastrModule } from "ngx-toastr";
-import { StoreModule } from "@ngrx/store";
+import { Store, StoreModule } from "@ngrx/store";
 import { EffectsModule } from "@ngrx/effects";
 import { AppRoutingModule } from "@app/app-routing.module";
 import { LayoutModule } from "./layout.module";
 import { AppEffects } from "./store/app.effects";
+import * as fromApp from '@app/core/store';
+import { AppConfigService } from "./services/app-config.service";
+import { TokenInterceptor } from "./interceptors/token.interceptor";
+import { ErrorInterceptor } from "./interceptors/error.interceptor";
+import * as fromAuth from '@app/core/store/auth';
+import { EMPTY, catchError, switchMap, take, tap } from "rxjs";
+import { AuthEffects } from "./store/auth/auth.effects";
+import { AuthService } from "./services/auth.service";
+
+export function initializeApp(appConfigService: AppConfigService, authService: AuthService, store: Store) {
+  return () => appConfigService.load().pipe(
+    tap(() => console.log("Aqui cheguei")),
+    switchMap(() => authService.loginWithToken().pipe(
+      take(1),
+      tap((response) => {
+        store.dispatch(fromAuth.AuthActions.loadSession({response}));
+      }),
+      catchError(() => {
+        return EMPTY;
+      })
+    ))
+  );
+}
 
 @NgModule({
   imports: [
     HttpClientModule,
     AppRoutingModule,
     ToastrModule.forRoot(),
-    StoreModule.forRoot(),
+    StoreModule.forRoot(fromApp.AppReducer.appReducer),
     EffectsModule.forRoot([
-      AppEffects
+      AppEffects,
+      AuthEffects
     ]),
   ],
   exports: [
@@ -24,6 +48,16 @@ import { AppEffects } from "./store/app.effects";
     BrowserAnimationsModule,
     LayoutModule,
     AppRoutingModule
+  ],
+  providers:[
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      deps: [AppConfigService, AuthService, Store],
+      useFactory: initializeApp
+    },
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ]
 })
 export class CoreModule {

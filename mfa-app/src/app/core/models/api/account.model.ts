@@ -35,4 +35,16 @@ export class AuthUser {
     public created: Date,
     public updated: Date | null,
     public isVerified: boolean) {}  
+
+    static fromResponse(response: IAuthSigninWithTokenResponse | IAuthLoginResponse): AuthUser {
+      return new AuthUser(
+        response.firstName,
+        response.lastName,
+        response.email,
+        response.role,
+        response.created,
+        response.updated,
+        response.isVerified
+      )
+    }
 }

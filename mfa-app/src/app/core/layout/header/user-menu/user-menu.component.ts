@@ -18,7 +18,6 @@ export class UserMenuComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isLoggedSubs = this.store.select(fromAuth.AuthSelectors.selectAuthIsAuthenticated).subscribe(
       (isLogged) => {
-        console.log("Sim logado?", isLogged);
         this.isLoggedIn = isLogged;
       });
   }

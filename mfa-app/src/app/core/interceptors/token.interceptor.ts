@@ -24,12 +24,17 @@ export class TokenInterceptor implements HttpInterceptor {
 
     return next.handle(req);
 
-    //IF YOU DECIDE TO GET IT FROM STORE
     // return this.store.select(fromAuth.AuthSelectors.selectAuthToken).pipe(
     //   take(1),
     //   mergeMap(token => {
-    //     const request =  token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` }})  : req;
-    //     return next.handle(request);
+    //     if(token) {
+    //       req = req.clone({
+    //         setHeaders: {
+    //           Authorization: `Bearer ${token}`
+    //         }
+    //       });
+    //     }
+    //     return next.handle(req);
     //   })
     // );
   }

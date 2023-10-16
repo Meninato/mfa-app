@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { login, loginFailure, loginSuccess, logout } from "./auth.actions";
+import { loadSession, login, loginFailure, loginSuccess, logout } from "./auth.actions";
 import { AuthUser } from "@app/core/models/api/account.model";
 
 export interface IAuthState {
@@ -21,19 +21,18 @@ export const authReducer = createReducer(
     return {
       loading: false,
       token: payload.response.jwtToken,
-      user: new AuthUser(
-        payload.response.firstName,
-        payload.response.lastName,
-        payload.response.email,
-        payload.response.role,
-        payload.response.created,
-        payload.response.updated,
-        payload.response.isVerified
-      )
+      user: AuthUser.fromResponse(payload.response)
     };
   }),
   on(loginFailure, (state) => ({...state, loading: false})),
-  on(logout, (state) => ({ ...initialState }))
+  on(logout, (state) => ({ ...initialState })),
+  on(loadSession, (state, payload) => {
+    console.log("loading the session", payload);
+    return {
+      ...state,
+      user: AuthUser.fromResponse(payload.response)
+    };
+  })
 );
 
 export const AUTH_FEATURE_KEY = 'auth';
