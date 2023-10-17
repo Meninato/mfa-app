@@ -8,6 +8,7 @@ export interface IAppConfig {
     auth: {
       login: string;
       loginWithToken: string;
+      refreshToken: string;
     }
   };
 }

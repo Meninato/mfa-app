@@ -1,36 +1,85 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, of, throwError } from "rxjs";
+import { BehaviorSubject, Observable, catchError, filter, finalize, of, switchMap, take, throwError } from "rxjs";
 import { IApiErrorResponse } from "../models/api/api-error-response.model";
+import { AuthService } from "../services/auth.service";
+import { IAuthRefreshTokenResponse } from "../models/api/account.model";
+import { Store } from "@ngrx/store";
+import * as fromAuth from '@app/core/store/auth';
 
 @Injectable({providedIn: 'root'})
 export class ErrorInterceptor implements HttpInterceptor{
+  private isRefreshing = false;
+  private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
-  constructor() {}
+  constructor(private authService: AuthService, private store: Store) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    req = req.clone({
+      withCredentials: true
+    });
+
     return next.handle(req).pipe(
       catchError((caughtError: HttpErrorResponse) => {
 
-        let errorMessage = 'Whoops... algo deu errado';
-
-        if(caughtError.status === 0 && caughtError.error instanceof ProgressEvent) {
-          errorMessage = 'Não foi possível conectar ao servidor. Tente novamente em alguns minutos.'
-        }
-        else if(caughtError.error instanceof ErrorEvent) {
-          errorMessage = caughtError.error.message;
+        //TODO: change url of signin (!req.url.includes('accounts/signin/with-token') || !req.url.includes('accounts/signin'))
+        if(caughtError.status === HttpStatusCode.Unauthorized) {
+          return this.handle401Error(req, next);
         } else {
-          const apiErrorResponse = caughtError.error as IApiErrorResponse;
-          errorMessage = apiErrorResponse.message;
-          if(apiErrorResponse.errors) {
-            const fieldError = apiErrorResponse.errors[0];
-            errorMessage = fieldError.message;
-          }
+          let errorMessage = this.getErrorMessge(caughtError);
+          return throwError(() => errorMessage);
         }
-
-        return throwError(() => errorMessage);
       })
     )
+  }
+
+  private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
+    if(!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+      return this.authService.refreshToken().pipe(
+        switchMap((response) => {
+          this.store.dispatch(fromAuth.AuthActions.loginSuccess(response, null));
+          this.refreshTokenSubject.next(response.jwtToken);
+          return next.handle(request);
+        }),
+        catchError((caughtError: HttpErrorResponse) => {
+          let errorMessage = this.getErrorMessge(caughtError);
+          return throwError(() => errorMessage);
+        }),
+        finalize(() => {
+          this.isRefreshing = false;
+        })
+      )
+    } else {
+      return this.refreshTokenSubject.pipe(
+        filter((token) => token !== null),
+        take(1),
+        switchMap(() => {
+          return next.handle(request);
+        })
+      )
+    }
+  }
+
+  private getErrorMessge(caughtError: HttpErrorResponse) {
+    let errorMessage = 'Whoops... algo deu errado';
+
+    if(caughtError.status === 0 && caughtError.error instanceof ProgressEvent) {
+      errorMessage = 'Não foi possível conectar ao servidor. Tente novamente em alguns minutos.'
+    }
+    else if(caughtError.error instanceof ErrorEvent) {
+      errorMessage = caughtError.error.message;
+    } else {
+      const apiErrorResponse = caughtError.error as IApiErrorResponse;
+      errorMessage = apiErrorResponse.message;
+      if(apiErrorResponse.errors) {
+        const fieldError = apiErrorResponse.errors[0];
+        errorMessage = fieldError.message;
+      }
+    }
+
+    return errorMessage;
   }
 
 }

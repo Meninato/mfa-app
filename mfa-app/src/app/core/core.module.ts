@@ -16,16 +16,18 @@ import * as fromAuth from '@app/core/store/auth';
 import { EMPTY, catchError, switchMap, take, tap } from "rxjs";
 import { AuthEffects } from "./store/auth/auth.effects";
 import { AuthService } from "./services/auth.service";
+import { LocalStorageService } from "./services/local-storage.service";
 
-export function initializeApp(appConfigService: AppConfigService, authService: AuthService, store: Store) {
+export function initializeApp(appConfigService: AppConfigService, 
+  authService: AuthService, store: Store, localStorageService: LocalStorageService) {
   return () => appConfigService.load().pipe(
-    tap(() => console.log("Aqui cheguei")),
     switchMap(() => authService.loginWithToken().pipe(
       take(1),
       tap((response) => {
         store.dispatch(fromAuth.AuthActions.loadSession({response}));
       }),
       catchError(() => {
+        localStorageService.removeItem('token');
         return EMPTY;
       })
     ))
@@ -53,7 +55,7 @@ export function initializeApp(appConfigService: AppConfigService, authService: A
     {
       provide: APP_INITIALIZER,
       multi: true,
-      deps: [AppConfigService, AuthService, Store],
+      deps: [AppConfigService, AuthService, Store, LocalStorageService],
       useFactory: initializeApp
     },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

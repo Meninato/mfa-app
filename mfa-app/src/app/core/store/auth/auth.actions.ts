@@ -1,4 +1,4 @@
-import { IAuthLoginRequest, IAuthLoginResponse, IAuthSigninWithTokenResponse } from "@app/core/models/api/account.model";
+import { IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthSigninWithTokenResponse } from "@app/core/models/api/account.model";
 import { createAction, props } from "@ngrx/store";
 
 export const login = createAction(
@@ -8,7 +8,8 @@ export const login = createAction(
 
 export const loginSuccess = createAction(
   '[Auth Signin] Login success',
-  props<{response: IAuthLoginResponse}>()
+  (response: IAuthLoginResponse | IAuthRefreshTokenResponse, redirectTo: string | null = '/') => ({response, redirectTo})
+  // props<{response: IAuthLoginResponse, redirectTo?: string }>()
 );
 
 export const loginFailure = createAction(

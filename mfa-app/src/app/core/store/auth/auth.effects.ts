@@ -15,7 +15,7 @@ export class AuthEffects {
       ofType(fromAuth.AuthActions.login),
       exhaustMap((action) => 
         this.authService.login(action.request).pipe(
-          map((response) => fromAuth.AuthActions.loginSuccess({response})),
+          map((response) => fromAuth.AuthActions.loginSuccess(response)),
           catchError((err) => {
             return of(fromAuth.AuthActions.loginFailure({error: err}))
           })
@@ -27,9 +27,11 @@ export class AuthEffects {
   loginSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(fromAuth.AuthActions.loginSuccess),
-      tap(({response}) => {
+      tap(({response, redirectTo}) => {
         this.localStorageService.setItem('token', response.jwtToken);
-        this.router.navigate(['/']);
+        if(redirectTo) {
+          this.router.navigate([redirectTo]);
+        }
       })
     ), { dispatch: false }
   );

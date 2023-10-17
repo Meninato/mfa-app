@@ -15,6 +15,18 @@ export interface IAuthLoginResponse {
   jwtToken: string; 
 }
 
+export interface IAuthRefreshTokenResponse {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  created: Date;
+  updated: Date | null;
+  isVerified: boolean;
+  jwtToken: string; 
+}
+
 export interface IAuthSigninWithTokenResponse {
   id: number;
   firstName: string;
@@ -36,7 +48,7 @@ export class AuthUser {
     public updated: Date | null,
     public isVerified: boolean) {}  
 
-    static fromResponse(response: IAuthSigninWithTokenResponse | IAuthLoginResponse): AuthUser {
+    static fromResponse(response: IAuthSigninWithTokenResponse | IAuthLoginResponse | IAuthRefreshTokenResponse): AuthUser {
       return new AuthUser(
         response.firstName,
         response.lastName,

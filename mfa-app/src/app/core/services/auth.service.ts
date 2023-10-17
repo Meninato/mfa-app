@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { IAuthLoginRequest, IAuthLoginResponse, IAuthSigninWithTokenResponse } from "../models/api/account.model";
+import { IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthSigninWithTokenResponse } from "../models/api/account.model";
 import { AppConfigService } from "./app-config.service";
 
 @Injectable({providedIn: 'root'})
@@ -17,6 +17,10 @@ export class AuthService {
 
   loginWithToken(): Observable<IAuthSigninWithTokenResponse> {
     return this.http.post<IAuthSigninWithTokenResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.loginWithToken}`, {});
+  }
+
+  refreshToken(): Observable<IAuthRefreshTokenResponse> {
+    return this.http.post<IAuthRefreshTokenResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.refreshToken}`, {});
   }
 
 }
