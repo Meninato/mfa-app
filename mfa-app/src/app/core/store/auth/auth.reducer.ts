@@ -3,13 +3,11 @@ import { loadSession, login, loginFailure, loginSuccess, logout } from "./auth.a
 import { AuthUser } from "@app/core/models/api/account.model";
 
 export interface IAuthState {
-  token: string;
   user: AuthUser | null;
   loading: boolean;
 }
 
 const initialState: IAuthState = {
-  token: "",
   user: null,
   loading: false
 }
@@ -27,7 +25,6 @@ export const authReducer = createReducer(
   on(loginFailure, (state) => ({...state, loading: false})),
   on(logout, (state) => ({ ...initialState })),
   on(loadSession, (state, payload) => {
-    console.log("loading the session", payload);
     return {
       ...state,
       user: AuthUser.fromResponse(payload.response)

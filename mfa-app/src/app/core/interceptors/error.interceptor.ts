@@ -22,8 +22,7 @@ export class ErrorInterceptor implements HttpInterceptor{
     return next.handle(req).pipe(
       catchError((caughtError: HttpErrorResponse) => {
 
-        //TODO: change url of signin (!req.url.includes('accounts/signin/with-token') || !req.url.includes('accounts/signin'))
-        if(caughtError.status === HttpStatusCode.Unauthorized) {
+        if( !req.url.includes('accounts/authenticate') && caughtError.status === HttpStatusCode.Unauthorized) {
           return this.handle401Error(req, next);
         } else {
           let errorMessage = this.getErrorMessge(caughtError);
@@ -37,13 +36,16 @@ export class ErrorInterceptor implements HttpInterceptor{
     if(!this.isRefreshing) {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
+
       return this.authService.refreshToken().pipe(
         switchMap((response) => {
           this.store.dispatch(fromAuth.AuthActions.loginSuccess(response, null));
           this.refreshTokenSubject.next(response.jwtToken);
-          return next.handle(request);
+          const reqWithToken = this.addToken(request, response.jwtToken);
+          return next.handle(reqWithToken);
         }),
         catchError((caughtError: HttpErrorResponse) => {
+          this.store.dispatch(fromAuth.AuthActions.logout());
           let errorMessage = this.getErrorMessge(caughtError);
           return throwError(() => errorMessage);
         }),
@@ -55,11 +57,20 @@ export class ErrorInterceptor implements HttpInterceptor{
       return this.refreshTokenSubject.pipe(
         filter((token) => token !== null),
         take(1),
-        switchMap(() => {
-          return next.handle(request);
+        switchMap((token) => {
+          const reqWithToken = this.addToken(request, token!);
+          return next.handle(reqWithToken);
         })
       )
     }
+  }
+
+  private addToken(request: HttpRequest<any>, token: string) {
+    return request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
 
   private getErrorMessge(caughtError: HttpErrorResponse) {
