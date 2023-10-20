@@ -22,7 +22,9 @@ export class SignUpComponent {
   private createForm() {
     return new FormGroup(
       {
-        'email': new FormControl(null, [Validators.required, Validators.email]),
+        'firstName': new FormControl(null, [Validators.required, Validators.maxLength(50)]), 
+        'lastName': new FormControl(null, [Validators.required, Validators.maxLength(100)]),
+        'email': new FormControl(null, [Validators.required, Validators.email, Validators.maxLength(254)]),
         'password': new FormControl(null, [Validators.required, Validators.minLength(8)]),
         'confirmPassword': new FormControl(null, [
           Validators.required, 
