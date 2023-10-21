@@ -1,15 +1,16 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { Store } from "@ngrx/store";
 import * as fromAuth from '@app/core/store/auth';
-import { Observable, Subscription, take } from "rxjs";
+import { Subscription } from "rxjs";
+import { initDropdowns } from "flowbite";
 
 @Component({
-  selector: 'header-user-menu',
+  selector: '[header-user-menu]',
   templateUrl: './user-menu.component.html',
   styleUrls: ['./user-menu.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class UserMenuComponent implements OnInit, OnDestroy {
+export class UserMenuComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoggedIn = false;
   private isLoggedSubs?: Subscription;
   
@@ -20,6 +21,10 @@ export class UserMenuComponent implements OnInit, OnDestroy {
       (isLogged) => {
         this.isLoggedIn = isLogged;
       });
+  }
+
+  ngAfterViewInit(): void {
+    initDropdowns();
   }
 
   ngOnDestroy(): void {

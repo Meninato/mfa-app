@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router, Event} from '@angular/router';
-import { initFlowbite } from 'flowbite';
 import { Observable, filter, map, of } from 'rxjs';
 
 @Component({
@@ -15,7 +14,6 @@ export class AppComponent implements OnInit {
   constructor(private router: Router, private activateRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    initFlowbite();
 
     this.router.events.pipe(
       filter((event: Event) => event instanceof NavigationStart),
@@ -23,9 +21,5 @@ export class AppComponent implements OnInit {
     ).subscribe(event => {
       this.displayLayout = !event.url.startsWith('/auth');
     });
-  }
-
-  a(): boolean {
-    return !this.router.url.startsWith('/auth');
   }
 }

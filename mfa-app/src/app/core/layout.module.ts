@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { SharedFormControlErrorModule } from "@app/shared/shared-form-control-error.module";
 import { LoadingButtonModule } from "@app/shared/components/loading-button/loading-button.module";
+import { DropdownDirective } from "./layout/header/user-menu/dropdown.directive";
 
 @NgModule({
   declarations: [
