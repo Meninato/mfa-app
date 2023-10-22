@@ -23,4 +23,8 @@ export class AuthService {
     return this.http.post<IAuthRefreshTokenResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.refreshToken}`, {});
   }
 
+  revokeToken(): Observable<void> {
+    return this.http.post<void>(`${this.config.api.baseUrl}/${this.config.api.auth.revokeToken}`, {});
+  }
+
 }

@@ -19,17 +19,22 @@ import { AuthService } from "./services/auth.service";
 import { LocalStorageService } from "./services/local-storage.service";
 
 export function initializeApp(appConfigService: AppConfigService, 
-  authService: AuthService, store: Store) {
+  authService: AuthService, store: Store, localStorage: LocalStorageService) {
   return () => appConfigService.load().pipe(
-    switchMap(() => authService.loginWithToken().pipe(
-      take(1),
-      tap((response) => {
-        store.dispatch(fromAuth.AuthActions.loadSession({response}));
-      }),
-      catchError(() => {
+    switchMap(() => {
+      const token = localStorage.getItem('token');
+      if(!token) {
         return EMPTY;
-      })
-    ))
+      }
+      return authService.loginWithToken().pipe(
+        take(1),
+        tap((response) => {
+          store.dispatch(fromAuth.AuthActions.loadSession({response}));
+        }),
+        catchError(() => {
+          return EMPTY;
+        })
+    )})
   );
 }
 
@@ -54,7 +59,7 @@ export function initializeApp(appConfigService: AppConfigService,
     {
       provide: APP_INITIALIZER,
       multi: true,
-      deps: [AppConfigService, AuthService, Store],
+      deps: [AppConfigService, AuthService, Store, LocalStorageService],
       useFactory: initializeApp
     },
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

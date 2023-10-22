@@ -20,7 +20,8 @@ import { DropdownDirective } from "./layout/header/user-menu/dropdown.directive"
     UserMenuComponent,
     SignInComponent,
     SignUpComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    DropdownDirective
   ],
   imports: [
     CommonModule,

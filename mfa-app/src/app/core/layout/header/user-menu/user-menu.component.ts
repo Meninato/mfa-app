@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
 import { Store } from "@ngrx/store";
 import * as fromAuth from '@app/core/store/auth';
 import { Subscription } from "rxjs";
-import { initDropdowns } from "flowbite";
+import { AuthUser } from "@app/core/models/api/account.model";
 
 @Component({
   selector: '[header-user-menu]',
@@ -10,24 +10,27 @@ import { initDropdowns } from "flowbite";
   styleUrls: ['./user-menu.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class UserMenuComponent implements OnInit, OnDestroy, AfterViewInit {
+export class UserMenuComponent implements OnInit, OnDestroy {
   isLoggedIn = false;
-  private isLoggedSubs?: Subscription;
-  
+  user: AuthUser | null = null;
+
+  private subscription?: Subscription;
+
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    this.isLoggedSubs = this.store.select(fromAuth.AuthSelectors.selectAuthIsAuthenticated).subscribe(
-      (isLogged) => {
-        this.isLoggedIn = isLogged;
+    this.subscription = this.store.select(fromAuth.AuthSelectors.selectAuthUser).subscribe(
+      (user) => {
+        this.isLoggedIn = !!user;
+        this.user = user;
       });
   }
 
-  ngAfterViewInit(): void {
-    initDropdowns();
+  onSignout() {
+    this.store.dispatch(fromAuth.AuthActions.logout());
   }
 
   ngOnDestroy(): void {
-    this.isLoggedSubs?.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 }

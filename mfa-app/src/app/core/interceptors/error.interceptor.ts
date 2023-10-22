@@ -21,8 +21,9 @@ export class ErrorInterceptor implements HttpInterceptor{
 
     return next.handle(req).pipe(
       catchError((caughtError: HttpErrorResponse) => {
-
-        if( !req.url.includes('accounts/authenticate') && caughtError.status === HttpStatusCode.Unauthorized) {
+        const token = req.headers.get('Authorization');
+        
+        if( token && (!req.url.includes('accounts/authenticate') && !req.url.includes('accounts/revoke-token')) && caughtError.status === HttpStatusCode.Unauthorized) {
           return this.handle401Error(req, next);
         } else {
           let errorMessage = this.getErrorMessge(caughtError);

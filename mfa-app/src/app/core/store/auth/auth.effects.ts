@@ -3,7 +3,7 @@ import { AuthService } from "@app/core/services/auth.service";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import * as fromAuth from '@app/core/store/auth';
 import * as fromApp from '@app/core/store';
-import { catchError, exhaustMap, map, of, switchMap, tap } from "rxjs";
+import { EMPTY, catchError, exhaustMap, finalize, map, of, switchMap, tap } from "rxjs";
 import { Router } from "@angular/router";
 import { LocalStorageService } from "@app/core/services/local-storage.service";
 
@@ -48,10 +48,17 @@ export class AuthEffects {
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(fromAuth.AuthActions.logout),
-      tap(() => {
-        this.localStorageService.removeItem('token');
-        this.router.navigate(['/']);
-      })
+      exhaustMap(() => 
+        this.authService.revokeToken().pipe(
+          finalize(() => {
+            this.localStorageService.removeItem('token');
+            this.router.navigate(['/']);
+          }),
+          catchError(() => {
+            return EMPTY;
+          })
+        )
+      ),
     ), { dispatch: false }
   );
 

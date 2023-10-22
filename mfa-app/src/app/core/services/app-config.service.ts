@@ -9,6 +9,7 @@ export interface IAppConfig {
       login: string;
       loginWithToken: string;
       refreshToken: string;
+      revokeToken: string;
     }
   };
 }
