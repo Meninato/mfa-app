@@ -10,6 +10,7 @@ export interface IAppConfig {
       loginWithToken: string;
       refreshToken: string;
       revokeToken: string;
+      forgotPassword: string;
     }
   };
 }

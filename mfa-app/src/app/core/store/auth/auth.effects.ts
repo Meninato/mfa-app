@@ -40,7 +40,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(fromAuth.AuthActions.loginFailure),
       switchMap(({error}) => {
-        return of(fromApp.AppActions.showAlert({options: {message: error}}));
+        return of(fromApp.AppActions.showAlert({options: {message: error, alertType: 'error'}}));
       })
     )
   );
@@ -61,6 +61,36 @@ export class AuthEffects {
       ),
     ), { dispatch: false }
   );
+
+  recoverPassword$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.recoverPassword),
+      exhaustMap((payload) => 
+        this.authService.forgotPassword(payload.request).pipe(
+          map(({message}) => fromAuth.AuthActions.recoverPasswordSuccess({text: message})),
+          catchError((err) => of(fromAuth.AuthActions.recoverPasswordFailure({error: err})))
+        )
+      )
+    )
+  );
+
+  recoverPasswordSuccess$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.recoverPasswordSuccess),
+      switchMap(({text}) => {
+        return of(fromApp.AppActions.showAlert({options: {message: text, alertType: 'info'}}));
+      })
+    )
+  );
+
+  recoverPasswordFailure$ = createEffect(() => 
+  this.actions$.pipe(
+    ofType(fromAuth.AuthActions.recoverPasswordFailure),
+    switchMap(({error}) => {
+      return of(fromApp.AppActions.showAlert({options: {message: error, alertType: 'error'}}));
+    })
+  )
+);
 
   constructor(
     private actions$: Actions, 

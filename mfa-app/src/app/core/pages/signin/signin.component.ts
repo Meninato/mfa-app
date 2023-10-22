@@ -1,9 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { LoadingButtonComponent } from "@app/shared/components/loading-button/loading-button.component";
 import { Store } from "@ngrx/store";
 import * as fromAuth from '@app/core/store/auth';
-import { Observable, Subscription, tap } from "rxjs";
+import { Subscription } from "rxjs";
 
 interface IAuthCredentials {
   email: string;

@@ -38,6 +38,10 @@ export interface IAuthSigninWithTokenResponse {
   isVerified: boolean;
 }
 
+export interface IAuthForgotPasswordRequest {
+  email: string;
+}
+
 export class AuthUser {
   constructor(
     public firstName: string,

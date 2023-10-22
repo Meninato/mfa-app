@@ -12,3 +12,7 @@ export const showAlert = createAction(
   '[App] Show Alert',
   props<{options: IAlert}>()
 )
+
+export const dummy = createAction(
+  '[App] DUMMY'
+)

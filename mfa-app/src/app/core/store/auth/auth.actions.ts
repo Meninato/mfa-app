@@ -1,4 +1,4 @@
-import { IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthSigninWithTokenResponse } from "@app/core/models/api/account.model";
+import { IAuthForgotPasswordRequest, IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthSigninWithTokenResponse } from "@app/core/models/api/account.model";
 import { createAction, props } from "@ngrx/store";
 
 export const login = createAction(
@@ -24,4 +24,19 @@ export const logout = createAction(
 export const loadSession = createAction(
   '[Auth] Load user session',
   props<{response: IAuthSigninWithTokenResponse}>()
+);
+
+export const recoverPassword = createAction(
+  '[Auth] Forgot password request',
+  props<{request: IAuthForgotPasswordRequest}>()
+);
+
+export const recoverPasswordSuccess = createAction(
+  '[Auth] Forgot password success',
+  props<{text: string}>()
+);
+
+export const recoverPasswordFailure = createAction(
+  '[Auth] Forgot password failure',
+  props<{error: string}>()
 );

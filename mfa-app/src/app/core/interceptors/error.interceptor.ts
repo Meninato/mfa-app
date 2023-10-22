@@ -1,7 +1,7 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpStatusCode } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, catchError, filter, finalize, of, switchMap, take, throwError } from "rxjs";
-import { IApiErrorResponse } from "../models/api/api-error-response.model";
+import { IApiErrorResponse } from "../models/api/api.model";
 import { AuthService } from "../services/auth.service";
 import { IAuthRefreshTokenResponse } from "../models/api/account.model";
 import { Store } from "@ngrx/store";

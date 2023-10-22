@@ -5,7 +5,8 @@
       "login": "accounts/authenticate",
       "loginWithToken": "accounts/signin/with-token",
       "refreshToken": "accounts/refresh-token",
-      "revokeToken": "accounts/revoke-token"
+      "revokeToken": "accounts/revoke-token",
+      "forgotPassword": "accounts/forgot-password"
     }
   }
 }

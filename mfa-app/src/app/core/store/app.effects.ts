@@ -25,5 +25,11 @@ export class AppEffects {
     ), { dispatch: false }
   );
 
+  dummy$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromApp.AppActions.dummy)
+    ), { dispatch: false }
+  );
+
   constructor(private actions$: Actions, private toastr: ToastrService) {}
 }

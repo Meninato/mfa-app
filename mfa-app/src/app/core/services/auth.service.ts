@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthSigninWithTokenResponse } from "../models/api/account.model";
+import { IAuthForgotPasswordRequest, IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthSigninWithTokenResponse } from "../models/api/account.model";
 import { AppConfigService } from "./app-config.service";
+import { IApiMessageResponse } from "../models/api/api.model";
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -25,6 +26,10 @@ export class AuthService {
 
   revokeToken(): Observable<void> {
     return this.http.post<void>(`${this.config.api.baseUrl}/${this.config.api.auth.revokeToken}`, {});
+  }
+
+  forgotPassword(request: IAuthForgotPasswordRequest): Observable<IApiMessageResponse> {
+    return this.http.post<IApiMessageResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.forgotPassword}`, request);
   }
 
 }
