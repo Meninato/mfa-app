@@ -5,6 +5,7 @@ import { SignInComponent } from "./core/pages/signin/signin.component";
 import { SignUpComponent } from "./core/pages/signup/signup.component";
 import { ForgotPasswordComponent } from "./core/pages/forgot-password/forgot-password.component";
 import { isUserLoggedInGuard } from "./core/guards/auth.guard";
+import { NotFoundComponent } from "./core/pages/not-found/not-found.component";
 
 const routes: Route[] = [
   {
@@ -29,7 +30,12 @@ const routes: Route[] = [
         component: ForgotPasswordComponent
       }
     ]
-  }
+  },
+  {
+    path: '404', 
+    component: NotFoundComponent
+  },
+  { path: '**', redirectTo: '/404' }
 ];
 
 @NgModule({

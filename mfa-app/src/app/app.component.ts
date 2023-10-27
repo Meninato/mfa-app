@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationStart, Router, Event} from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router, Event, NavigationEnd} from '@angular/router';
 import { Observable, filter, map, of } from 'rxjs';
 
 @Component({
@@ -16,10 +16,10 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
 
     this.router.events.pipe(
-      filter((event: Event) => event instanceof NavigationStart),
-      map(event => event as NavigationStart)
+      filter((event: Event) => event instanceof NavigationEnd),
+      map(event => event as NavigationEnd)
     ).subscribe(event => {
-      this.displayLayout = !event.url.startsWith('/auth');
+      this.displayLayout = !event.url.startsWith('/auth') && !event.url.startsWith('/404');
     });
   }
 }
