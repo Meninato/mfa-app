@@ -1,8 +1,35 @@
 import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from "@angular/router";
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from "@angular/router";
 import { Store } from "@ngrx/store";
-import { map, of, tap, withLatestFrom } from "rxjs";
+import { catchError, map, of} from "rxjs";
 import * as fromAuth from '@app/core/store/auth';
+import * as fromApp from '@app/core/store';
+import { AuthService } from "../services/auth.service";
+
+export const isValidResetTokenGuard = (routeSnapshot: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const store = inject(Store);
+
+  const token = routeSnapshot.queryParamMap.get('token');
+  if(!token) {
+    return false;
+  }
+
+  return authService.validateResetToken({
+    token
+  }).pipe(
+    map(() => true),
+    catchError((err) => {
+      store.dispatch(fromApp.AppActions.showAlert({
+        options: {
+          message: err
+        }
+      }));
+      return of(router.createUrlTree(['/']));
+    })
+  );
+}
 
 export const isUserLoggedInGuard = () => {
   const store = inject(Store);

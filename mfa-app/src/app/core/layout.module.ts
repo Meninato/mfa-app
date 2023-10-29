@@ -13,6 +13,7 @@ import { SharedFormControlErrorModule } from "@app/shared/shared-form-control-er
 import { LoadingButtonModule } from "@app/shared/components/loading-button/loading-button.module";
 import { DropdownDirective } from "./layout/header/user-menu/dropdown.directive";
 import { NotFoundComponent } from "./pages/not-found/not-found.component";
+import { ResetPasswordComponent } from "./pages/reset-password/reset-password.component";
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { NotFoundComponent } from "./pages/not-found/not-found.component";
     SignInComponent,
     SignUpComponent,
     ForgotPasswordComponent,
+    ResetPasswordComponent,
     NotFoundComponent,
     DropdownDirective
   ],

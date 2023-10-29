@@ -11,6 +11,8 @@ export interface IAppConfig {
       refreshToken: string;
       revokeToken: string;
       forgotPassword: string;
+      resetPassword: string;
+      validateResetToken: string;
     }
   };
 }

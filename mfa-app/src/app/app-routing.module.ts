@@ -4,8 +4,9 @@ import { HomeComponent } from "./core/pages/home/home.component";
 import { SignInComponent } from "./core/pages/signin/signin.component";
 import { SignUpComponent } from "./core/pages/signup/signup.component";
 import { ForgotPasswordComponent } from "./core/pages/forgot-password/forgot-password.component";
-import { isUserLoggedInGuard } from "./core/guards/auth.guard";
+import { isUserLoggedInGuard, isValidResetTokenGuard } from "./core/guards/auth.guard";
 import { NotFoundComponent } from "./core/pages/not-found/not-found.component";
+import { ResetPasswordComponent } from "./core/pages/reset-password/reset-password.component";
 
 const routes: Route[] = [
   {
@@ -28,6 +29,11 @@ const routes: Route[] = [
       {
         path: 'forgot-password',
         component: ForgotPasswordComponent
+      },
+      {
+        path: 'reset-password',
+        canActivate: [isValidResetTokenGuard],
+        component: ResetPasswordComponent
       }
     ]
   },

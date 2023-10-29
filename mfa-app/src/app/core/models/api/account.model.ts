@@ -42,6 +42,16 @@ export interface IAuthForgotPasswordRequest {
   email: string;
 }
 
+export interface IAuthResetPasswordRequest {
+  token: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface IAuthValidateResetTokenRequest {
+  token: string;
+}
+
 export class AuthUser {
   constructor(
     public firstName: string,

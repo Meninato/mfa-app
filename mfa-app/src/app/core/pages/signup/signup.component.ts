@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "@app/core/services/auth.service";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 @Component({
@@ -11,7 +10,7 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 export class SignUpComponent {
   signupForm = this.createForm();
 
-  constructor(private authService: AuthService) {}
+  constructor() {}
 
   onSubmit() {
     if(this.signupForm.valid) {

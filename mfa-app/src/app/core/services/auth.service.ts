@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { IAuthForgotPasswordRequest, IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthSigninWithTokenResponse } from "../models/api/account.model";
+import { IAuthForgotPasswordRequest, IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthResetPasswordRequest, IAuthSigninWithTokenResponse, IAuthValidateResetTokenRequest } from "../models/api/account.model";
 import { AppConfigService } from "./app-config.service";
 import { IApiMessageResponse } from "../models/api/api.model";
 
@@ -30,6 +30,14 @@ export class AuthService {
 
   forgotPassword(request: IAuthForgotPasswordRequest): Observable<IApiMessageResponse> {
     return this.http.post<IApiMessageResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.forgotPassword}`, request);
+  }
+
+  resetPassword(request: IAuthResetPasswordRequest): Observable<IApiMessageResponse> {
+    return this.http.post<IApiMessageResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.resetPassword}`, request);
+  }
+
+  validateResetToken(request: IAuthValidateResetTokenRequest): Observable<IApiMessageResponse> {
+    return this.http.post<IApiMessageResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.validateResetToken}`, request);
   }
 
 }

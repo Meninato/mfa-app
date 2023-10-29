@@ -84,9 +84,41 @@ export class AuthEffects {
   );
 
   recoverPasswordFailure$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.recoverPasswordFailure),
+      switchMap(({error}) => {
+        return of(fromApp.AppActions.showAlert({options: {message: error, alertType: 'error'}}));
+      })
+    )
+  );
+
+  resetPassword$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.resetPassword),
+      exhaustMap((payload) => 
+        this.authService.resetPassword(payload.request).pipe(
+          map(({message}) => fromAuth.AuthActions.resetPasswordSuccess({text: message})),
+          catchError((err) => of(fromAuth.AuthActions.resetPasswordFailure({error: err})))
+        )
+      )
+    )
+  );
+
+  resetPasswordSuccess$ = createEffect(() => 
   this.actions$.pipe(
-    ofType(fromAuth.AuthActions.recoverPasswordFailure),
+    ofType(fromAuth.AuthActions.resetPasswordSuccess),
+    switchMap(({text}) => {
+      this.router.navigate(['/']);
+      return of(fromApp.AppActions.showAlert({options: {message: text, alertType: 'info'}}));
+    })
+  )
+);
+
+resetPasswordFailure$ = createEffect(() => 
+  this.actions$.pipe(
+    ofType(fromAuth.AuthActions.resetPasswordFailure),
     switchMap(({error}) => {
+      this.router.navigate(['/']);
       return of(fromApp.AppActions.showAlert({options: {message: error, alertType: 'error'}}));
     })
   )

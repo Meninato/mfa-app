@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
       filter((event: Event) => event instanceof NavigationEnd),
       map(event => event as NavigationEnd)
     ).subscribe(event => {
-      this.displayLayout = !event.url.startsWith('/auth') && !event.url.startsWith('/404');
+      this.displayLayout = !event.url.startsWith('/auth') && !event.urlAfterRedirects.startsWith('/404');
     });
   }
 }

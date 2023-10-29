@@ -1,5 +1,16 @@
 import { createReducer, on } from "@ngrx/store";
-import { loadSession, login, loginFailure, loginSuccess, logout, recoverPassword, recoverPasswordFailure, recoverPasswordSuccess } from "./auth.actions";
+import { 
+  loadSession, 
+  login, 
+  loginFailure, 
+  loginSuccess, 
+  logout, 
+  recoverPassword, 
+  recoverPasswordFailure, 
+  recoverPasswordSuccess, 
+  resetPassword, 
+  resetPasswordFailure, 
+  resetPasswordSuccess } from "./auth.actions";
 import { AuthUser } from "@app/core/models/api/account.model";
 
 export interface IAuthState {
@@ -32,7 +43,10 @@ export const authReducer = createReducer(
   }),
   on(recoverPassword, (state) => ({...state, loading: true})),
   on(recoverPasswordSuccess, (state) => ({...state, loading: false})),
-  on(recoverPasswordFailure, (state) => ({...state, loading: false}))
+  on(recoverPasswordFailure, (state) => ({...state, loading: false})),
+  on(resetPassword, (state) => ({...state, loading: true})),
+  on(resetPasswordSuccess, (state) => ({...state, loading: false})),
+  on(resetPasswordFailure, (state) => ({...state, loading: false}))
 );
 
 export const AUTH_FEATURE_KEY = 'auth';
