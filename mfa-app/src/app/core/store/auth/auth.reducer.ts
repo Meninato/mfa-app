@@ -8,6 +8,9 @@ import {
   recoverPassword, 
   recoverPasswordFailure, 
   recoverPasswordSuccess, 
+  register, 
+  registerFailure, 
+  registerSuccess, 
   resetPassword, 
   resetPasswordFailure, 
   resetPasswordSuccess } from "./auth.actions";
@@ -46,7 +49,10 @@ export const authReducer = createReducer(
   on(recoverPasswordFailure, (state) => ({...state, loading: false})),
   on(resetPassword, (state) => ({...state, loading: true})),
   on(resetPasswordSuccess, (state) => ({...state, loading: false})),
-  on(resetPasswordFailure, (state) => ({...state, loading: false}))
+  on(resetPasswordFailure, (state) => ({...state, loading: false})),
+  on(register, (state) => ({...state, loading: true})),
+  on(registerSuccess, (state) => ({...state, loading: false})),
+  on(registerFailure, (state) => ({...state, loading: false})),
 );
 
 export const AUTH_FEATURE_KEY = 'auth';

@@ -14,6 +14,7 @@ import { LoadingButtonModule } from "@app/shared/components/loading-button/loadi
 import { DropdownDirective } from "./layout/header/user-menu/dropdown.directive";
 import { NotFoundComponent } from "./pages/not-found/not-found.component";
 import { ResetPasswordComponent } from "./pages/reset-password/reset-password.component";
+import { VerifyEmailComponent } from "./pages/verify-email/verify-email.component";
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ResetPasswordComponent } from "./pages/reset-password/reset-password.co
     SignUpComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+    VerifyEmailComponent,
     NotFoundComponent,
     DropdownDirective
   ],

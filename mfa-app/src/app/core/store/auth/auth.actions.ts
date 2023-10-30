@@ -1,4 +1,4 @@
-import { IAuthForgotPasswordRequest, IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthResetPasswordRequest, IAuthSigninWithTokenResponse } from "@app/core/models/api/account.model";
+import { IAuthForgotPasswordRequest, IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthRegisterRequest, IAuthResetPasswordRequest, IAuthSigninWithTokenResponse } from "@app/core/models/api/account.model";
 import { createAction, props } from "@ngrx/store";
 
 export const login = createAction(
@@ -53,5 +53,20 @@ export const resetPasswordSuccess = createAction(
 
 export const resetPasswordFailure = createAction(
   '[Auth] Reset password failure',
+  props<{error: string}>()
+);
+
+export const register = createAction(
+  '[Auth Signup] Register',
+  props<{request: IAuthRegisterRequest}>()
+);
+
+export const registerSuccess = createAction(
+  '[Auth Signup] Register success',
+  props<{text: string}>()
+);
+
+export const registerFailure = createAction(
+  '[Auth Signup] Register failure',
   props<{error: string}>()
 );

@@ -8,7 +8,8 @@
       "revokeToken": "accounts/revoke-token",
       "forgotPassword": "accounts/forgot-password",
       "resetPassword": "accounts/reset-password",
-      "validateResetToken": "accounts/validate-reset-token"
+      "validateResetToken": "accounts/validate-reset-token",
+      "register": "accounts/register"
     }
   }
 }

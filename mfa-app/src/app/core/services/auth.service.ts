@@ -1,7 +1,15 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { HttpClient } from "@angular/common/http";
-import { IAuthForgotPasswordRequest, IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthResetPasswordRequest, IAuthSigninWithTokenResponse, IAuthValidateResetTokenRequest } from "../models/api/account.model";
+import { 
+  IAuthForgotPasswordRequest, 
+  IAuthLoginRequest, 
+  IAuthLoginResponse, 
+  IAuthRefreshTokenResponse, 
+  IAuthRegisterRequest, 
+  IAuthResetPasswordRequest, 
+  IAuthSigninWithTokenResponse, 
+  IAuthValidateResetTokenRequest } from "../models/api/account.model";
 import { AppConfigService } from "./app-config.service";
 import { IApiMessageResponse } from "../models/api/api.model";
 
@@ -38,6 +46,10 @@ export class AuthService {
 
   validateResetToken(request: IAuthValidateResetTokenRequest): Observable<IApiMessageResponse> {
     return this.http.post<IApiMessageResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.validateResetToken}`, request);
+  }
+
+  register(request: IAuthRegisterRequest): Observable<IApiMessageResponse> {
+    return this.http.post<IApiMessageResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.register}`, request);
   }
 
 }

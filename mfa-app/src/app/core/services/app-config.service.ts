@@ -13,6 +13,7 @@ export interface IAppConfig {
       forgotPassword: string;
       resetPassword: string;
       validateResetToken: string;
+      register: string;
     }
   };
 }

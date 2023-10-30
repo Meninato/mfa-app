@@ -105,24 +105,55 @@ export class AuthEffects {
   );
 
   resetPasswordSuccess$ = createEffect(() => 
-  this.actions$.pipe(
-    ofType(fromAuth.AuthActions.resetPasswordSuccess),
-    switchMap(({text}) => {
-      this.router.navigate(['/']);
-      return of(fromApp.AppActions.showAlert({options: {message: text, alertType: 'info'}}));
-    })
-  )
-);
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.resetPasswordSuccess),
+      switchMap(({text}) => {
+        this.router.navigate(['/']);
+        return of(fromApp.AppActions.showAlert({options: {message: text, alertType: 'info'}}));
+      })
+    )
+  );
 
-resetPasswordFailure$ = createEffect(() => 
-  this.actions$.pipe(
-    ofType(fromAuth.AuthActions.resetPasswordFailure),
-    switchMap(({error}) => {
-      this.router.navigate(['/']);
-      return of(fromApp.AppActions.showAlert({options: {message: error, alertType: 'error'}}));
-    })
-  )
-);
+  resetPasswordFailure$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.resetPasswordFailure),
+      switchMap(({error}) => {
+        this.router.navigate(['/']);
+        return of(fromApp.AppActions.showAlert({options: {message: error, alertType: 'error'}}));
+      })
+    )
+  );
+
+  register$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.register),
+      exhaustMap((payload) => 
+        this.authService.register(payload.request).pipe(
+          map(({message}) => fromAuth.AuthActions.registerSuccess({text: message})),
+          catchError((err) => of(fromAuth.AuthActions.registerFailure({error: err})))
+        )
+      )
+    )
+  );
+
+  registerSuccess$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.registerSuccess),
+      switchMap(({text}) => {
+        this.router.navigate(['/']);
+        return of(fromApp.AppActions.showAlert({options: {message: text, alertType: 'info'}}));
+      })
+    )
+  );
+
+  registerFailure$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.registerFailure),
+      switchMap(({error}) => {
+        return of(fromApp.AppActions.showAlert({options: {message: error, alertType: 'error'}}));
+      })
+    )
+  );
 
   constructor(
     private actions$: Actions, 

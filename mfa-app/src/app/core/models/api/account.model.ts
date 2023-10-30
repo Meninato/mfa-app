@@ -52,6 +52,15 @@ export interface IAuthValidateResetTokenRequest {
   token: string;
 }
 
+export interface IAuthRegisterRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  acceptTerms: boolean;
+}
+
 export class AuthUser {
   constructor(
     public firstName: string,

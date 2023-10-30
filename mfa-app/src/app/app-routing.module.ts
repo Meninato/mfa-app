@@ -7,6 +7,7 @@ import { ForgotPasswordComponent } from "./core/pages/forgot-password/forgot-pas
 import { isUserLoggedInGuard, isValidResetTokenGuard } from "./core/guards/auth.guard";
 import { NotFoundComponent } from "./core/pages/not-found/not-found.component";
 import { ResetPasswordComponent } from "./core/pages/reset-password/reset-password.component";
+import { VerifyEmailComponent } from "./core/pages/verify-email/verify-email.component";
 
 const routes: Route[] = [
   {
@@ -34,6 +35,10 @@ const routes: Route[] = [
         path: 'reset-password',
         canActivate: [isValidResetTokenGuard],
         component: ResetPasswordComponent
+      },
+      {
+        path: 'verify-email',
+        component: VerifyEmailComponent
       }
     ]
   },

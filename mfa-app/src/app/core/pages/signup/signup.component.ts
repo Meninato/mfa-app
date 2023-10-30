@@ -1,20 +1,55 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Store } from "@ngrx/store";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import * as fromAuth from '@app/core/store/auth';
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'auth-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignUpComponent {
-  signupForm = this.createForm();
+export class SignUpComponent implements OnInit, OnDestroy{
+  signupForm!: FormGroup;
+  isLoading: boolean = false;
 
-  constructor() {}
+  private loadingSubs?: Subscription;
+
+  constructor(private store: Store) { }
+
+  ngOnInit(): void {
+    this.signupForm = this.createForm();
+    this.loadingSubs = this.store.select(fromAuth.AuthSelectors.selectAuthIsLoading).subscribe(
+      (loading) => this.isLoading = loading
+    );
+
+    this.signupForm = this.createForm();
+  }
+
+  ngOnDestroy(): void {
+    this.loadingSubs?.unsubscribe();
+  }
 
   onSubmit() {
     if(this.signupForm.valid) {
+      const firstName = this.signupForm.get('firstName')?.value;
+      const lastName = this.signupForm.get('lastName')?.value;
+      const email = this.signupForm.get('email')?.value;
+      const password = this.signupForm.get('password')?.value;
+      const confirmPassword = this.signupForm.get('confirmPassword')?.value;
+      const acceptTerms = this.signupForm.get('terms')?.value;
 
+      this.store.dispatch(fromAuth.AuthActions.register({
+        request: {
+          firstName,
+          lastName,
+          email,
+          password,
+          confirmPassword,
+          acceptTerms
+        }
+      }));
     }
   }
 
