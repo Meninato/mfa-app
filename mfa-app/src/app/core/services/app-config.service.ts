@@ -14,6 +14,7 @@ export interface IAppConfig {
       resetPassword: string;
       validateResetToken: string;
       register: string;
+      verifyEmail: string;
     }
   };
 }

@@ -9,7 +9,8 @@
       "forgotPassword": "accounts/forgot-password",
       "resetPassword": "accounts/reset-password",
       "validateResetToken": "accounts/validate-reset-token",
-      "register": "accounts/register"
+      "register": "accounts/register",
+      "verifyEmail": "accounts/verify-email"
     }
   }
 }

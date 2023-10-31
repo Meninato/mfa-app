@@ -9,7 +9,8 @@ import {
   IAuthRegisterRequest, 
   IAuthResetPasswordRequest, 
   IAuthSigninWithTokenResponse, 
-  IAuthValidateResetTokenRequest } from "../models/api/account.model";
+  IAuthValidateResetTokenRequest, 
+  IAuthVerifyEmailRequest} from "../models/api/account.model";
 import { AppConfigService } from "./app-config.service";
 import { IApiMessageResponse } from "../models/api/api.model";
 
@@ -50,6 +51,10 @@ export class AuthService {
 
   register(request: IAuthRegisterRequest): Observable<IApiMessageResponse> {
     return this.http.post<IApiMessageResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.register}`, request);
+  }
+
+  verifyEmail(request: IAuthVerifyEmailRequest): Observable<IApiMessageResponse> {
+    return this.http.post<IApiMessageResponse>(`${this.config.api.baseUrl}/${this.config.api.auth.verifyEmail}`, request);
   }
 
 }

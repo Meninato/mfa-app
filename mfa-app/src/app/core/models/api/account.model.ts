@@ -61,6 +61,10 @@ export interface IAuthRegisterRequest {
   acceptTerms: boolean;
 }
 
+export interface IAuthVerifyEmailRequest {
+  token: string;
+}
+
 export class AuthUser {
   constructor(
     public firstName: string,
