@@ -6,6 +6,16 @@ import * as fromAuth from '@app/core/store/auth';
 import * as fromApp from '@app/core/store';
 import { AuthService } from "../services/auth.service";
 
+export const isValidVerifyEmailToken = (routeSnapshot: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  let canContinue = true;
+  const token = routeSnapshot.queryParamMap.get('token');
+  if(!token) {
+    canContinue = false;
+  }
+
+  return canContinue;
+}
+
 export const isValidResetTokenGuard = (routeSnapshot: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
   const authService = inject(AuthService);
   const router = inject(Router);

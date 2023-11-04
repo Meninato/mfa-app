@@ -155,6 +155,28 @@ export class AuthEffects {
     )
   );
 
+  verifyEmail$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.verifyEmail),
+      exhaustMap((payload) => 
+        this.authService.verifyEmail(payload.request).pipe(
+          map(({message}) => fromAuth.AuthActions.verifyEmailSuccess({text: message})),
+          // catchError((err) => of(fromAuth.AuthActions.registerFailure({error: err})))
+        )
+      )
+    )
+  );
+
+  verifyEmailSuccess$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(fromAuth.AuthActions.verifyEmailSuccess),
+      switchMap(({text}) => {
+        this.router.navigate(['/']);
+        return of(fromApp.AppActions.showAlert({options: {message: text, alertType: 'info'}}));
+      })
+    )
+  );
+
   constructor(
     private actions$: Actions, 
     private authService: AuthService, 

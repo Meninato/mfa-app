@@ -1,10 +1,10 @@
-import { NgModule, inject } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { Route, RouterModule, PreloadAllModules } from "@angular/router";
 import { HomeComponent } from "./core/pages/home/home.component";
 import { SignInComponent } from "./core/pages/signin/signin.component";
 import { SignUpComponent } from "./core/pages/signup/signup.component";
 import { ForgotPasswordComponent } from "./core/pages/forgot-password/forgot-password.component";
-import { isUserLoggedInGuard, isValidResetTokenGuard } from "./core/guards/auth.guard";
+import { isUserLoggedInGuard, isValidResetTokenGuard, isValidVerifyEmailToken } from "./core/guards/auth.guard";
 import { NotFoundComponent } from "./core/pages/not-found/not-found.component";
 import { ResetPasswordComponent } from "./core/pages/reset-password/reset-password.component";
 import { VerifyEmailComponent } from "./core/pages/verify-email/verify-email.component";
@@ -38,6 +38,7 @@ const routes: Route[] = [
       },
       {
         path: 'verify-email',
+        canActivate: [isValidVerifyEmailToken],
         component: VerifyEmailComponent
       }
     ]

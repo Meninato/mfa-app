@@ -1,4 +1,4 @@
-import { IAuthForgotPasswordRequest, IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthRegisterRequest, IAuthResetPasswordRequest, IAuthSigninWithTokenResponse } from "@app/core/models/api/account.model";
+import { IAuthForgotPasswordRequest, IAuthLoginRequest, IAuthLoginResponse, IAuthRefreshTokenResponse, IAuthRegisterRequest, IAuthResetPasswordRequest, IAuthSigninWithTokenResponse, IAuthVerifyEmailRequest } from "@app/core/models/api/account.model";
 import { createAction, props } from "@ngrx/store";
 
 export const login = createAction(
@@ -69,4 +69,14 @@ export const registerSuccess = createAction(
 export const registerFailure = createAction(
   '[Auth Signup] Register failure',
   props<{error: string}>()
+);
+
+export const verifyEmail = createAction(
+  '[Auth Verify Email] Verify Email',
+  props<{request: IAuthVerifyEmailRequest}>()
+);
+
+export const verifyEmailSuccess = createAction(
+  '[Auth Verify Email] Verify Email Success',
+  props<{text: string}>()
 );
