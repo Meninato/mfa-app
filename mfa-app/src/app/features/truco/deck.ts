@@ -1,12 +1,38 @@
-import { Card } from "./card";
-import { DrawTypes } from "./draws";
+import { Card, CardRankTypes, TrucoCardRankTypes, cardRanks, cardSuits } from "./card";
 
-interface IPickOptions {
+const trucoRankValues = new Map<CardRankTypes, number>([
+  [cardRanks.Four, 1],
+  [cardRanks.Five, 2],
+  [cardRanks.Six, 3],
+  [cardRanks.Seven, 4],
+  [cardRanks.Queen, 5],
+  [cardRanks.Jack, 6],
+  [cardRanks.King, 7],
+  [cardRanks.Ace, 8],
+  [cardRanks.Two, 9],
+  [cardRanks.Three, 10]
+]);
+
+export const games = {
+  Truco: "truco"
+} as const;
+
+export type GameTypes = typeof games[ keyof typeof games];
+
+export const draw = {
+  TopToBottom: "fromTop",
+  BottomToUp: "fromBottom",
+  Random: "random"
+} as const;
+
+export type DrawTypes = typeof draw[keyof typeof draw];
+
+export interface IPickOptions {
   quantity?: number;
   draw?: DrawTypes;
 }
 
-interface IDeckOfCards {
+export interface IDeckOfCards {
   getCards(): Card[];
   shuffle(): void;
   pick(options?: IPickOptions): Card[] | string;
@@ -14,6 +40,9 @@ interface IDeckOfCards {
 }
 
 export class Deck implements IDeckOfCards {
+  private static pickCardValues = new Map<GameTypes, (rank: CardRankTypes) => number>([
+    ["truco", Deck.getGameTrucoCardValue]
+  ]);
   private pickStrategies = new Map<DrawTypes, (qty: number) => Card[]>([
     ["fromTop", this.pickCardFromTop],
     ["fromBottom", this.pickCardFromBottom],
@@ -53,6 +82,44 @@ export class Deck implements IDeckOfCards {
     }
   }
 
+  public static factoryCards(game: GameTypes) {
+    const cards: Card[] = [];
+    let card: Card;
+    let rankProperty: keyof typeof cardRanks;
+    let suitProperty: keyof typeof cardSuits;
+    let cardValue: number;
+    for (rankProperty in cardRanks) {
+      for(suitProperty in cardSuits) {
+
+        const method = Deck.pickCardValues.get(game)!;
+        cardValue = method(cardRanks[rankProperty]);
+        card = new Card(cardSuits[suitProperty], cardRanks[rankProperty], cardValue);
+      }
+    }
+  }
+
+  /**
+   * Opens opportunity to create a more complex method to get a value based on all combinations
+   */
+  private static buildCardsForGameTruco(): Card[] {
+    const cards: Card[] = [];
+    let card: Card;
+    let rankProperty: keyof typeof cardRanks;
+    let suitProperty: keyof typeof cardSuits;
+    let cardValue: number;
+
+    const x = TrucoCardRankTypes
+
+    for (rankProperty in cardRanks) {
+      for(suitProperty in cardSuits) {
+
+        const method = Deck.pickCardValues.get(game)!;
+        cardValue = method(cardRanks[rankProperty]);
+        card = new Card(cardSuits[suitProperty], cardRanks[rankProperty], cardValue);
+      }
+    }
+  }
+
   private pickCardFromTop(pick: number): Card[] {
     return this.cards.splice(pick * -1);
   }
@@ -70,6 +137,4 @@ export class Deck implements IDeckOfCards {
     }
     return pickedCards;
   }
-
-
 }
