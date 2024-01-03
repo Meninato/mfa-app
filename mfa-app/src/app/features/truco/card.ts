@@ -22,7 +22,6 @@ export const cardRanks = {
 } as const;
 
 export type CardRankTypes = typeof cardRanks[keyof typeof cardRanks];
-export type TrucoCardRankTypes = Omit<CardRankTypes, "Eight" | "Nine" | "Ten">;
 
 export const cardSuits = {
   Hearts: "hearts",
