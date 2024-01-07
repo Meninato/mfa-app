@@ -15,9 +15,12 @@ import { DropdownDirective } from "./layout/header/user-menu/dropdown.directive"
 import { NotFoundComponent } from "./pages/not-found/not-found.component";
 import { ResetPasswordComponent } from "./pages/reset-password/reset-password.component";
 import { VerifyEmailComponent } from "./pages/verify-email/verify-email.component";
+import { TrucoModule } from "@app/features/truco/truco.module";
+import { HomeComponent } from "./pages/home/home.component";
 
 @NgModule({
   declarations: [
+    HomeComponent,
     FooterComponent,
     HeaderComponent,
     UserMenuComponent,
@@ -35,7 +38,8 @@ import { VerifyEmailComponent } from "./pages/verify-email/verify-email.componen
     ReactiveFormsModule,
     RxReactiveFormsModule,
     SharedFormControlErrorModule,
-    LoadingButtonModule
+    LoadingButtonModule,
+    TrucoModule
   ],
   exports: [
     FooterComponent,
